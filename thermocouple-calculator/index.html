@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thermocouple Calculator – °C to mV with Cold Junction (K, J, T, E, N, R, S, B) | LoopCalc</title>
+<meta name="description" content="Thermocouple mV to °C and °C to mV calculator for types K, J, T, E, N, R, S and B using NIST ITS-90 reference functions, with cold-junction compensation and range checks.">
+<link rel="canonical" href="https://sayanioc.github.io/tool_site/thermocouple-calculator/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Thermocouple mV Calculator","url":"https://sayanioc.github.io/tool_site/thermocouple-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Thermocouple °C to mV and mV to °C for types K, J, T, E, N, R, S, B (NIST ITS-90) with cold-junction compensation."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Temperature</nav>
+<h1>Thermocouple Calculator (°C ↔ mV)</h1>
+<p class="lead">Convert hot-junction temperature to thermocouple voltage and back for types K, J, T, E, N, R, S and B, using the NIST ITS-90 reference functions with cold-junction compensation.</p>
+
+<section class="card tool" aria-label="Calculator">
+  <div class="fields">
+    <div class="field"><label for="type">Thermocouple type</label><select id="type">
+      <option value="K">Type K (NiCr-NiAl)</option><option value="J">Type J (Fe-CuNi)</option><option value="T">Type T (Cu-CuNi)</option><option value="E">Type E (NiCr-CuNi)</option><option value="N">Type N (NiCrSi-NiSi)</option><option value="R">Type R (Pt13Rh-Pt)</option><option value="S">Type S (Pt10Rh-Pt)</option><option value="B">Type B (Pt30Rh-Pt6Rh)</option></select><p class="hint" id="range-hint"></p></div>
+    <div class="field"><label for="cj">Cold junction / terminal temperature (°C)</label><input id="cj" type="number" step="any" inputmode="decimal" value="0"><p class="hint">0 °C = table (ice point) reference. Enter the terminal temperature to match what a meter actually reads.</p><p class="err" id="cj-err"></p></div>
+  </div>
+  <hr class="sep">
+  <div class="fields big">
+    <div class="field"><label for="t">Hot junction temperature (°C)</label><input id="t" type="number" step="any" inputmode="decimal" value="100"><p class="err" id="t-err"></p></div>
+    <div class="field"><label for="mv">Measured EMF at terminals (mV)</label><input id="mv" type="number" step="any" inputmode="decimal"><p class="err" id="mv-err"></p></div>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this calculator does</h2>
+<p>A thermocouple produces a voltage that depends on the temperature difference between its hot (measuring) junction and its cold (reference) junction – usually the transmitter or card terminals. This calculator gives the voltage a meter would read for a given process temperature and terminal temperature, and the process temperature for a measured voltage. Use it to set a mV source when calibrating, or to check a reading with a multimeter.</p>
+<h2>Formula</h2>
+<pre class="formula">E(t)   = Σ cᵢ·tⁱ          (+ a₀·exp[a₁(t − a₂)²] for type K, t ≥ 0 °C)
+E_meas = E(t_hot) − E(t_cold)               (what the meter reads)
+t_hot  = E⁻¹( E_meas + E(t_cold) )          (cold-junction compensation)</pre>
+<p>E is in mV with the reference junction at 0 °C; cᵢ and aᵢ are the NIST ITS-90 coefficients for each type and temperature sub-range. The inverse is solved numerically from E(t), so converting back and forth is exact to better than 0.000001 °C (the NIST inverse polynomials are approximations with up to ±0.06 °C error).</p>
+<h2>Worked example</h2>
+<p>Type K, process 100 °C, transmitter terminals at 25 °C. E(100) = 4.096 mV, E(25) = 1.000 mV, so a meter at the terminals reads 4.096 − 1.000 = <strong>3.096 mV</strong>. Conversely, if you read 3.096 mV with terminals at 25 °C: 3.096 + 1.000 = 4.096 mV → <strong>100 °C</strong>. Simply converting 3.096 mV with the 0 °C table would give 75.9 °C – a 24 °C error.</p>
+<h2>Ranges (NIST ITS-90 reference functions)</h2>
+<pre class="formula">K −270…1372 °C   J −210…1200 °C   T −270…400 °C   E −270…1000 °C
+N −270…1300 °C   R −50…1768.1 °C  S −50…1768.1 °C  B 0…1820 °C (mV→°C from 50 °C)</pre>
+<p>Practical sheath and wire limits are usually much lower than these – check the sensor datasheet. Type B output is almost zero and double-valued below 50 °C, so its reverse conversion starts at 50 °C.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li><strong>Ignoring the cold junction</strong>: converting terminal mV with the 0 °C table. Always add E(t_cold).</li>
+  <li>Adding temperatures instead of voltages (t_hot ≠ t_from_mV + t_cold, because E(t) is non-linear).</li>
+  <li>Wrong extension/compensating cable or reversed polarity (the red lead is negative in ANSI colour codes; IEC 60584-3 uses colours by type with a white negative).</li>
+  <li>Copper wire between the thermocouple and the CJC point moves the reference junction.</li>
+  <li>Using type K in reducing atmospheres around 800–1050 °C (green rot) or type J above 760 °C (magnetic transformation) – both cause drift.</li>
+</ul>
+<h2>Standards</h2>
+<ul>
+  <li>NIST Monograph 175 (1993) and NIST ITS-90 Thermocouple Database (SRD 60) – reference functions and coefficients.</li>
+  <li>IEC 60584-1:2013 – EMF specifications and tolerances (same reference functions).</li>
+  <li>ASTM E230 – standard specification and temperature-EMF tables.</li>
+</ul>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../rtd-pt100-calculator/">Pt100 / Pt1000 RTD calculator</a></li>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { TYPES, emf, measuredEmf, hotJunctionTemperature, seebeck } from '../js/calc/thermocouple.js';
+import { $, readNum, fmt, setFieldError, setMsg, setupCopyButtons } from '../js/ui.js';
+
+const q = new URLSearchParams(location.search);
+let src = q.get('src') === 'mv' ? 'mv' : 't';
+if (TYPES[q.get('type')]) $('type').value = q.get('type');
+if (q.has('cj')) $('cj').value = q.get('cj');
+if (q.has(src)) $(src).value = q.get(src);
+let resultText = '';
+
+function update() {
+  ['cj', 't', 'mv'].forEach((id) => setFieldError(id, ''));
+  setMsg('msg', ''); $('result').textContent = ''; resultText = '';
+  const type = $('type').value, d = TYPES[type];
+  $('range-hint').textContent = `${d.name}. Range ${d.min} to ${d.max} °C.`;
+  history.replaceState(null, '', `?${new URLSearchParams({ type, cj: $('cj').value, src, [src]: $(src).value })}`);
+  const cj = readNum($('cj')), v = readNum($(src));
+  const other = src === 't' ? 'mv' : 't';
+  if (Number.isNaN(cj)) { setFieldError('cj', 'Enter the cold-junction temperature.'); $(other).value = ''; return; }
+  try { emf(cj, type); } catch (e) { setFieldError('cj', e.message); $(other).value = ''; return; }
+  if (Number.isNaN(v)) { $(other).value = ''; return; }
+  try {
+    const t = src === 't' ? v : hotJunctionTemperature(v, cj, type);
+    const mv = src === 'mv' ? v : measuredEmf(t, cj, type);
+    $(other).value = src === 't' ? fmt(mv, 4) : fmt(t, 2);
+    const e0 = emf(t, type), ecj = emf(cj, type);
+    resultText = `Type ${type}: ${fmt(t, 2)} °C hot junction, ${fmt(cj, 2)} °C cold junction = ${fmt(mv, 4)} mV (NIST ITS-90)`;
+    const s = document.createElement('strong'); s.textContent = resultText;
+    $('result').append(s, document.createElement('br'),
+      `E(${fmt(t, 2)} °C) = ${fmt(e0, 4)} mV · E(${fmt(cj, 2)} °C) = ${fmt(ecj, 4)} mV (CJC) · Seebeck ≈ ${fmt(seebeck(t, type), 1)} µV/°C`);
+    if (type === 'B' && t < 250) setMsg('msg', 'Type B output is very small below about 250 °C; accuracy is poor in this region.', 'warn');
+  } catch (e) {
+    setFieldError(src, e.message); $(other).value = '';
+  }
+}
+
+$('t').addEventListener('input', () => { src = 't'; update(); });
+$('mv').addEventListener('input', () => { src = 'mv'; update(); });
+['type', 'cj'].forEach((id) => { $(id).addEventListener('input', update); $(id).addEventListener('change', update); });
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>
