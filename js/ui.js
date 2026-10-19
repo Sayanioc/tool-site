@@ -17,6 +17,12 @@ export function fmt(x, dp = 3) {
   return /^-0\.?0*$/.test(s) ? s.slice(1) : s;
 }
 
+/** Like fmt() but with an explicit "+" for positive values (errors, deviations). */
+export function fmtSigned(x, dp = 3) {
+  const s = fmt(x, dp);
+  return s && !s.startsWith('-') && Number(s) !== 0 ? `+${s}` : s;
+}
+
 /** Significant-figure formatting for converters (up to `sig` digits, no trailing zeros). */
 export function fmtSig(x, sig = 6) {
   if (!Number.isFinite(x)) return '';

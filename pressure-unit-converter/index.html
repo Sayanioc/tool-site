@@ -31,7 +31,22 @@
     <div class="field"><label for="patm">Local atmospheric pressure (kPa abs)</label><input id="patm" type="number" step="any" inputmode="decimal" value="101.325"><p class="hint">101.325 kPa = sea level standard. Use your site barometric pressure for accuracy.</p><p class="err" id="patm-err"></p></div>
   </div>
   <hr class="sep">
-  <div class="fields" id="unit-fields"></div>
+  <div class="fields" id="unit-fields">
+    <div class="field"><label for="u-bar">bar <span class="hint">bar</span></label><input id="u-bar" type="number" step="any" inputmode="decimal"><p class="hint" id="o-bar">&nbsp;</p></div>
+    <div class="field"><label for="u-mbar">mbar <span class="hint">millibar</span></label><input id="u-mbar" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mbar">&nbsp;</p></div>
+    <div class="field"><label for="u-psi">psi <span class="hint">pound-force per square inch</span></label><input id="u-psi" type="number" step="any" inputmode="decimal"><p class="hint" id="o-psi">&nbsp;</p></div>
+    <div class="field"><label for="u-kPa">kPa <span class="hint">kilopascal</span></label><input id="u-kPa" type="number" step="any" inputmode="decimal"><p class="hint" id="o-kPa">&nbsp;</p></div>
+    <div class="field"><label for="u-MPa">MPa <span class="hint">megapascal</span></label><input id="u-MPa" type="number" step="any" inputmode="decimal"><p class="hint" id="o-MPa">&nbsp;</p></div>
+    <div class="field"><label for="u-kgcm2">kg/cm² <span class="hint">kilogram-force per square centimetre</span></label><input id="u-kgcm2" type="number" step="any" inputmode="decimal"><p class="hint" id="o-kgcm2">&nbsp;</p></div>
+    <div class="field"><label for="u-mmH2O">mmH₂O <span class="hint">millimetre of water (conventional)</span></label><input id="u-mmH2O" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mmH2O">&nbsp;</p></div>
+    <div class="field"><label for="u-inH2O">inH₂O <span class="hint">inch of water (conventional)</span></label><input id="u-inH2O" type="number" step="any" inputmode="decimal"><p class="hint" id="o-inH2O">&nbsp;</p></div>
+    <div class="field"><label for="u-mmHg">mmHg <span class="hint">millimetre of mercury (conventional)</span></label><input id="u-mmHg" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mmHg">&nbsp;</p></div>
+    <div class="field"><label for="u-atm">atm <span class="hint">standard atmosphere</span></label><input id="u-atm" type="number" step="any" inputmode="decimal"><p class="hint" id="o-atm">&nbsp;</p></div>
+    <div class="field"><label for="u-Pa">Pa <span class="hint">pascal</span></label><input id="u-Pa" type="number" step="any" inputmode="decimal"><p class="hint" id="o-Pa">&nbsp;</p></div>
+    <div class="field"><label for="u-mH2O">mH₂O <span class="hint">metre of water (conventional)</span></label><input id="u-mH2O" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mH2O">&nbsp;</p></div>
+    <div class="field"><label for="u-inHg">inHg <span class="hint">inch of mercury (conventional)</span></label><input id="u-inHg" type="number" step="any" inputmode="decimal"><p class="hint" id="o-inHg">&nbsp;</p></div>
+    <div class="field"><label for="u-torr">Torr <span class="hint">torr (1/760 atm)</span></label><input id="u-torr" type="number" step="any" inputmode="decimal"><p class="hint" id="o-torr">&nbsp;</p></div>
+  </div>
   <p class="msg" id="msg" role="alert"></p>
   <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
 </section>
@@ -69,7 +84,9 @@ P(atm) ≈ 101.325 kPa at sea level; ≈ 89.9 kPa at 1000 m altitude</pre>
 </ul>
 </article>
 <section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../dp-level-calculator/">DP level transmitter range</a></li>
   <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../control-valve-cv-calculator/">Control valve Cv / Kv (liquid)</a></li>
   <li><a href="../#calculators">All instrumentation calculators</a></li>
 </ul></section>
 </main>
@@ -82,14 +99,6 @@ import { UNITS, toPa, fromPa, gaugeAbs } from '../js/calc/pressure.js';
 import { $, readNum, fmtSig, radioValue, setFieldError, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
 
 const ORDER = ['bar', 'mbar', 'psi', 'kPa', 'MPa', 'kgcm2', 'mmH2O', 'inH2O', 'mmHg', 'atm', 'Pa', 'mH2O', 'inHg', 'torr'];
-const box = $('unit-fields');
-for (const k of ORDER) {
-  const d = UNITS[k];
-  const f = document.createElement('div');
-  f.className = 'field';
-  f.innerHTML = `<label for="u-${k}">${d.label} <span class="hint">${d.name}</span></label><input id="u-${k}" type="number" step="any" inputmode="decimal"><p class="hint" id="o-${k}"></p>`;
-  box.append(f);
-}
 const q = new URLSearchParams(location.search);
 let src = UNITS[q.get('u')] ? q.get('u') : 'bar';
 $(`u-${src}`).value = q.has('v') ? q.get('v') : '1';
@@ -105,7 +114,7 @@ function update() {
   const v = readNum($(`u-${src}`));
   const p = new URLSearchParams({ u: src, v: $(`u-${src}`).value, ref, patm: $('patm').value });
   history.replaceState(null, '', `?${p}`);
-  const clear = () => ORDER.forEach((k) => { if (k !== src) $(`u-${k}`).value = ''; $(`o-${k}`).textContent = ''; });
+  const clear = () => ORDER.forEach((k) => { if (k !== src) $(`u-${k}`).value = ''; $(`o-${k}`).textContent = '\u00a0'; });
   if (Number.isNaN(v)) { clear(); return; }
   if (Number.isNaN(patmKPa)) { setFieldError('patm', 'Enter the atmospheric pressure.'); clear(); return; }
   let ga;

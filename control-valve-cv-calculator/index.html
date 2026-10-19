@@ -77,6 +77,7 @@ Valid only if Δp &lt; Δp_choked</pre>
 <section class="related doc"><h2>Related calculators</h2><ul>
   <li><a href="../pressure-unit-converter/">Pressure unit converter</a></li>
   <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../dp-level-calculator/">DP level transmitter range</a></li>
   <li><a href="../#calculators">All instrumentation calculators</a></li>
 </ul></section>
 </main>
@@ -113,7 +114,7 @@ function update() {
     resultText = `Liquid valve sizing (IEC 60534-2-1, non-choked): Kv = ${fmt(r.kv, 2)}, Cv = ${fmt(r.cv, 2)} for Q = ${vals.q} ${FLOW_UNITS[$('qu').value].label}, Δp = ${fmt(dpU, 3)} ${L}, SG = ${vals.sg}`;
     const s = document.createElement('strong'); s.textContent = `Kv = ${fmt(r.kv, 2)} · Cv = ${fmt(r.cv, 2)}`;
     $('result').append(s, document.createElement('br'), `Δp = ${fmt(dpU, 3)} ${L} · Δp_choked = ${fmt(dpcU, 3)} ${L} · FF = ${fmt(r.ff, 3)} · margin ${fmt((1 - r.dp / r.dpChoked) * 100, 1)} %`);
-    if (r.dp > 0.8 * r.dpChoked) setMsg('msg', 'Δp is above 80 % of the choked-flow limit: incipient cavitation may occur before full choking. Check the valve's incipient-cavitation factor (xFz) with the vendor.', 'warn');
+    if (r.dp > 0.8 * r.dpChoked) setMsg('msg', 'Δp is above 80 % of the choked-flow limit: incipient cavitation may occur before full choking. Check the valve’s incipient-cavitation factor (xFz) with the vendor.', 'warn');
   } catch (e) {
     setMsg('msg', e.message, 'bad');
   }

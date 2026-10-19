@@ -86,6 +86,7 @@ Pass            ⇔ |error| ≤ tolerance</pre>
 <section class="related doc"><h2>Related calculators</h2><ul>
   <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
   <li><a href="../pressure-unit-converter/">Pressure unit converter</a></li>
+  <li><a href="../rtd-pt100-calculator/">Pt100 / Pt1000 RTD calculator</a></li>
   <li><a href="../#calculators">All instrumentation calculators</a></li>
 </ul></section>
 </main>
@@ -95,7 +96,7 @@ Pass            ⇔ |error| ≤ tolerance</pre>
 </div></footer>
 <script type="module">
 import { calibrationSheet, DEFAULT_POINTS } from '../js/calc/calibration.js';
-import { $, readNum, fmt, restoreFromQuery, writeQuery, setMsg, setupCopyButtons } from '../js/ui.js';
+import { $, readNum, fmt, fmtSigned, restoreFromQuery, writeQuery, setMsg, setupCopyButtons } from '../js/ui.js';
 
 const body = $('tbl').tBodies[0];
 DEFAULT_POINTS.forEach((p, i) => {
@@ -128,8 +129,8 @@ function update() {
   s.rows.forEach((r, i) => {
     $(`in${i}`).textContent = `${fmt(r.input, 4)} ${unit}`;
     $(`ex${i}`).textContent = fmt(r.expected, 3);
-    $(`afe${i}`).textContent = r.asFound ? fmt(r.asFound.err, 3) : '';
-    $(`ale${i}`).textContent = r.asLeft ? fmt(r.asLeft.err, 3) : '';
+    $(`afe${i}`).textContent = r.asFound ? fmtSigned(r.asFound.err, 3) : '';
+    $(`ale${i}`).textContent = r.asLeft ? fmtSigned(r.asLeft.err, 3) : '';
     verdict($(`afr${i}`), r.asFound); verdict($(`alr${i}`), r.asLeft);
   });
   const sum = (name, x) => x.pass === null ? `${name}: not entered` : `${name}: ${x.pass ? 'PASS' : 'FAIL'} (max error ${fmt(x.maxAbsErr, 3)} % of span, ${x.entered}/5 points)`;

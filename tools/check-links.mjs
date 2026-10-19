@@ -3,6 +3,9 @@
 // match its location; each page must have exactly one <h1>. Zero dependencies.
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
+import { writeFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
@@ -47,6 +50,18 @@ for (const file of pages) {
   for (const m of html.matchAll(/import\s[^'"]*['"](\.{1,2}\/[^'"]+)['"]/g)) {
     const t = join(dirname(file), m[1]);
     if (!existsSync(t)) errors.push(`${rel}: broken import "${m[1]}"`);
+  }
+  // inline module scripts must at least parse (catches quoting mistakes in page glue)
+  for (const m of html.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
+    const dir = mkdtempSync(join(tmpdir(), 'lc-'));
+    const f = join(dir, 'inline.mjs');
+    writeFileSync(f, m[1]);
+    const r = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });
+    if (r.status !== 0) errors.push(`${rel}: inline script syntax error\n${r.stderr.split('\n').slice(0, 5).join('\n')}`);
+    rmSync(dir, { recursive: true, force: true });
+  }
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try { JSON.parse(m[1]); } catch (e) { errors.push(`${rel}: invalid JSON-LD (${e.message})`); }
   }
   if (rel === '404.html') continue;
   const h1 = (html.match(/<h1[\s>]/g) || []).length;
