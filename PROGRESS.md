@@ -10,7 +10,7 @@ Alternatives: **InstruCalc**, **TagCalc**, **FieldCal Tools**.
 | # | Milestone | Status |
 |---|-----------|--------|
 | 1 | Site shell: home, nav, footer disclaimer, responsive, 404, sitemap, robots, favicon | Done |
-| 2 | 4-20 mA scaling | Not started |
+| 2 | 4-20 mA scaling (`/4-20ma-calculator/`) | Done – tests + browser smoke test at 360 px |
 | 3 | Pressure units | Not started |
 | 4 | RTD Pt100/Pt1000 | Not started |
 | 5 | Thermocouples | Not started |
