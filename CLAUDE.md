@@ -5,7 +5,7 @@ Static I&C calculator site (working name **LoopCalc**). Read PLAN.md and PROGRES
 ## Tech rules
 - Plain HTML, CSS, vanilla JS ES modules. **No frameworks, no build step, no external
   CDNs, fonts or trackers.** Must run on GitHub Pages from the repo root.
-- Base URL: `https://sayanioc.github.io/tool_site/` — used only in canonical tags,
+- Base URL: `https://sayanioc.github.io/tool-site/` — used only in canonical tags,
   JSON-LD, sitemap.xml, robots.txt and 404.html. Change it everywhere with
   `node tools/set-base-url.mjs <new-base-url>`.
 - All math in **pure functions under `/js/calc/`** (no DOM), one module per calculator.

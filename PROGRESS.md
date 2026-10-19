@@ -39,7 +39,7 @@ labelled inputs, footer disclaimer.
 - Browser smoke test (Playwright/Chromium, 360 px): every page loads with no console errors,
   no horizontal page scroll; results appear for default and query-string inputs.
 - Lighthouse 12 (local server, mobile): **100 / 100 / 100 / 100** (performance, accessibility,
-  best practices, SEO) on all calculator pages + homepage (temperature converter: smoke-tested only).
+  best practices, SEO) on all 10 calculator pages + homepage.
 - Calibration sheet prints on one A4 page (checked via Chromium PDF).
 
 ## How the thermocouple coefficients were sourced (please read)
@@ -54,12 +54,9 @@ Recommended follow-up: diff `js/calc/thermocouple.js` coefficients against
 https://srdata.nist.gov/its90/download/allcoeff.tab from a machine with access.
 
 ## Open questions
-1. **Base URL vs repo name.** You asked for `https://sayanioc.github.io/tool_site/`, but the
-   GitHub repo is `Sayanioc/tool-site` (hyphen). GitHub Pages serves a project site at
-   `https://sayanioc.github.io/tool-site/` unless the repo is renamed to `tool_site`.
-   The site uses `tool_site` as requested. If you keep the repo name, run
-   `node tools/set-base-url.mjs https://sayanioc.github.io/tool-site/` (one command, then
-   re-run the checks). Otherwise canonical URLs and the 404 page will point to the wrong path.
+1. ~~Base URL vs repo name~~ **Resolved 2026-10-19:** base URL switched to
+   `https://sayanioc.github.io/tool-site/` (matches the repo name) with
+   `node tools/set-base-url.mjs`. For a custom domain later, run it again with the new URL.
 2. **inH₂O reference.** The converter uses the conventional inch of water (ρ = 1000 kg/m³,
    249.08891 Pa). Some transmitters use water at 68 °F (248.64 Pa) or 60 °F (248.84 Pa).
    This is stated on the page; a selectable reference could be added.
@@ -75,7 +72,7 @@ https://srdata.nist.gov/its90/download/allcoeff.tab from a machine with access.
    20.5–21.0 mA as under/over-range warnings.
 
 ## Next steps (suggested priority)
-1. Decide the base URL (open question 1), enable GitHub Pages, submit sitemap in Search Console.
+1. Enable GitHub Pages, submit sitemap in Search Console.
 2. Merge the branch to `main` (Pages deploys from the default branch root).
 3. New calculators (high search demand for I&C): orifice plate flow (ISO 5167-2), RTD lead-wire
    error, flow unit converter, PID tuning helper, SIL/PFDavg helper.

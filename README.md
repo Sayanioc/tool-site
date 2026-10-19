@@ -9,7 +9,7 @@ power budget and control valve Cv/Kv (IEC 60534-2-1, liquids).
 - Plain HTML + CSS + vanilla JavaScript ES modules. No frameworks, no build step,
   no external CDNs, fonts, analytics or trackers.
 - All math lives in pure, unit-tested modules in `js/calc/`.
-- Live site (planned): https://sayanioc.github.io/tool_site/
+- Live site (planned): https://sayanioc.github.io/tool-site/
 
 ## Run locally
 
