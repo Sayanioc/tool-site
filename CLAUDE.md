@@ -13,6 +13,9 @@ Static I&C calculator site (working name **LoopCalc**). Read PLAN.md and PROGRES
 - Shared `/css/style.css` and `/js/ui.js`. A new calculator = one `<slug>/index.html`
   (inline `<script type="module">` glue) + one `js/calc/<name>.js` + one test file,
   then add it to `index.html`, `sitemap.xml` and PROGRESS.md.
+- Never delete, rename or modify google5a4ac238096a586b.html (Google Search Console verification).
+  `tools/check-links.mjs` fails if it is missing or changed; `tools/set-base-url.mjs` skips it.
+- Keep the empty `.nojekyll` at the repo root so GitHub Pages serves files as-is (no Jekyll build).
 - Pages live in `<slug>/index.html` and use relative paths (`../css/style.css`).
 
 ## Accuracy (non-negotiable)

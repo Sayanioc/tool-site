@@ -21,6 +21,7 @@ let changed = 0;
     const p = join(dir, name);
     if (statSync(p).isDirectory()) { walk(p); continue; }
     if (!/\.(html|xml|txt)$/.test(name)) continue;
+    if (/^google[0-9a-f]+\.html$/.test(name)) continue; // Search Console verification: never touch
     const src = readFileSync(p, 'utf8');
     let out = src.split(current).join(next);
     out = out.split(`<base href="${curPath}">`).join(`<base href="${nextPath}">`);

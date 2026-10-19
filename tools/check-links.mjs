@@ -11,13 +11,22 @@ const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
 const BASE = (sitemap.match(/<loc>([^<]+)<\/loc>/) || [])[1];
 const errors = [];
+// Search-engine ownership files (e.g. google<hex>.html): served as-is, never edited,
+// never treated as pages. See CLAUDE.md.
+const VERIFICATION_FILE = /^google[0-9a-f]+\.html$/;
+const REQUIRED_VERIFICATION = ['google5a4ac238096a586b.html'];
+for (const name of REQUIRED_VERIFICATION) {
+  const p = join(ROOT, name);
+  if (!existsSync(p)) errors.push(`${name}: Google Search Console verification file is missing`);
+  else if (readFileSync(p, 'utf8').trim() !== `google-site-verification: ${name}`) errors.push(`${name}: verification file content was changed`);
+}
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
     if (name.startsWith('.') || name === 'node_modules') continue;
     const p = join(dir, name);
     if (statSync(p).isDirectory()) walk(p, out);
-    else if (name.endsWith('.html')) out.push(p);
+    else if (name.endsWith('.html') && !VERIFICATION_FILE.test(name)) out.push(p);
   }
   return out;
 }

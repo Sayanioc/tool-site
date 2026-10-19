@@ -71,9 +71,14 @@ https://srdata.nist.gov/its90/download/allcoeff.tab from a machine with access.
 6. **NAMUR NE 43 boundaries**: ≤ 3.6 mA and ≥ 21.0 mA are treated as failure; 3.6–3.8 and
    20.5–21.0 mA as under/over-range warnings.
 
+## Deployment notes (2026-10-19)
+- PR #1 merged to `main`. Google Search Console verification file
+  `google5a4ac238096a586b.html` added to the repo root (via GitHub web UI) – never edit it.
+- Added `.nojekyll` so Pages serves files as-is. Link checker now ignores `google<hex>.html`
+  as a page but fails if the verification file is missing or altered.
+
 ## Next steps (suggested priority)
-1. Enable GitHub Pages, submit sitemap in Search Console.
-2. Merge the branch to `main` (Pages deploys from the default branch root).
+1. Confirm Pages serves from `main` / root, verify ownership in Search Console, submit sitemap.
 3. New calculators (high search demand for I&C): orifice plate flow (ISO 5167-2), RTD lead-wire
    error, flow unit converter, PID tuning helper, SIL/PFDavg helper.
 4. Optional: selectable inH₂O reference; °F display on temperature tools; hysteresis
