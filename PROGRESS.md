@@ -18,6 +18,7 @@ Alternatives: **InstruCalc**, **TagCalc**, **FieldCal Tools**.
 | 7 | Calibration sheet: 5-point as-found/as-left, error % span, pass/fail, print | `/calibration-sheet/` | Done |
 | 8 | (stretch) Control valve liquid Cv/Kv, IEC 60534-2-1 non-choked + choked/flashing check | `/control-valve-cv-calculator/` | Done |
 | 9 | (extra) Loop power budget: max loop resistance, terminal voltage, cable/barrier, HART 230 Ω | `/loop-power-calculator/` | Done |
+| 10 | (extra) Temperature converter °C/°F/K/°R + difference mode | `/temperature-converter/` | Done |
 
 Every calculator page has: instant two-way results, query-string sharing, copy-result and
 copy-link buttons, what-it-does / formula / worked example / common mistakes / standard
@@ -25,7 +26,7 @@ sections, unique title + meta description, one H1, canonical, JSON-LD WebApplica
 labelled inputs, footer disclaimer.
 
 ## Verified
-- `node --test`: **48 tests pass** (8 files in `tests/`).
+- `node --test`: **52 tests pass** (9 files in `tests/`).
   - Required checks: **Pt100 @ 100 °C = 138.5055 Ω** ✔, **Type K @ 100 °C = 4.096 mV** ✔.
   - RTD: IEC 60751 table values −200…850 °C (0.01 Ω), round-trip °C→Ω→°C < 1e-9 °C every 0.5 °C.
   - Thermocouples: NIST ITS-90 table values for all 8 types (±0.6 µV), piece continuity at
@@ -38,7 +39,7 @@ labelled inputs, footer disclaimer.
 - Browser smoke test (Playwright/Chromium, 360 px): every page loads with no console errors,
   no horizontal page scroll; results appear for default and query-string inputs.
 - Lighthouse 12 (local server, mobile): **100 / 100 / 100 / 100** (performance, accessibility,
-  best practices, SEO) on all 9 calculator pages + homepage.
+  best practices, SEO) on all calculator pages + homepage (temperature converter: smoke-tested only).
 - Calibration sheet prints on one A4 page (checked via Chromium PDF).
 
 ## How the thermocouple coefficients were sourced (please read)
@@ -76,7 +77,7 @@ https://srdata.nist.gov/its90/download/allcoeff.tab from a machine with access.
 ## Next steps (suggested priority)
 1. Decide the base URL (open question 1), enable GitHub Pages, submit sitemap in Search Console.
 2. Merge the branch to `main` (Pages deploys from the default branch root).
-3. New calculators (high search demand for I&C): temperature unit converter, orifice plate flow (ISO 5167-2), RTD lead-wire
+3. New calculators (high search demand for I&C): orifice plate flow (ISO 5167-2), RTD lead-wire
    error, flow unit converter, PID tuning helper, SIL/PFDavg helper.
 4. Optional: selectable inH₂O reference; °F display on temperature tools; hysteresis
    (downscale) points on the calibration sheet; Open Graph images.
