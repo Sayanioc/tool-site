@@ -31,7 +31,7 @@
     <div class="field"><label for="pu">Pressure unit</label><select id="pu"><option value="bar">bar</option><option value="kPa">kPa</option><option value="kgcm2">kg/cm²</option><option value="MPa">MPa</option><option value="psi">psi</option></select></div>
     <fieldset class="field"><legend>Pressures are</legend><div class="radios">
       <label><input type="radio" name="ref" value="abs" checked> Absolute</label>
-      <label><input type="radio" name="ref" value="gauge"> Gauge</label></div></fieldset>
+      <label><input type="radio" name="ref" value="gauge"> Gauge</label></div><p class="hint">Gauge values are converted with 1.01325 bar standard atmosphere.</p></fieldset>
     <div class="field"><label for="p1">Inlet pressure p1</label><input id="p1" type="number" step="any" inputmode="decimal" value="6.8"></div>
     <div class="field"><label for="p2">Outlet pressure p2</label><input id="p2" type="number" step="any" inputmode="decimal" value="2.2"></div>
     <div class="field"><label for="pv">Vapour pressure pv (always absolute)</label><input id="pv" type="number" step="any" inputmode="decimal" value="0.701"></div>

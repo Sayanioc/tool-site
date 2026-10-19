@@ -3,7 +3,8 @@
 LoopCalc (working name) is a free, fast, static website of calculators for
 instrumentation & control (I&C) engineers and technicians in refineries and process
 plants: 4-20 mA scaling, pressure units (incl. kg/cm²), Pt100/Pt1000 RTDs (IEC 60751),
-thermocouples (NIST ITS-90), DP level transmitter ranging and calibration sheets.
+thermocouples (NIST ITS-90), DP level transmitter ranging, calibration sheets, loop
+power budget and control valve Cv/Kv (IEC 60534-2-1, liquids).
 
 - Plain HTML + CSS + vanilla JavaScript ES modules. No frameworks, no build step,
   no external CDNs, fonts, analytics or trackers.
