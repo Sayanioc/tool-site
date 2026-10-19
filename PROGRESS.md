@@ -12,7 +12,7 @@ Alternatives: **InstruCalc**, **TagCalc**, **FieldCal Tools**.
 | 1 | Site shell: home, nav, footer disclaimer, responsive, 404, sitemap, robots, favicon | Done |
 | 2 | 4-20 mA scaling (`/4-20ma-calculator/`) | Done – tests + browser smoke test at 360 px |
 | 3 | Pressure units (`/pressure-unit-converter/`) | Done – tests + browser smoke test |
-| 4 | RTD Pt100/Pt1000 | Not started |
+| 4 | RTD Pt100/Pt1000 (`/rtd-pt100-calculator/`) | Done – Pt100@100 °C = 138.5055 Ω verified, IEC table values, round-trip, smoke test |
 | 5 | Thermocouples | Not started |
 | 6 | DP level range | Not started |
 | 7 | Calibration sheet | Not started |
