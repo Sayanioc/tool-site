@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transmitter Calibration Sheet Generator – 5-Point As-Found / As-Left | LoopCalc</title>
+<meta name="description" content="Free printable 5-point calibration sheet for 4-20 mA transmitters: expected mA, as-found and as-left error in % of span, pass/fail against your tolerance. Shareable link, no sign-up.">
+<link rel="canonical" href="https://sayanioc.github.io/tool_site/calibration-sheet/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Calibration Sheet Generator","url":"https://sayanioc.github.io/tool_site/calibration-sheet/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"5-point as-found / as-left calibration record for 4-20 mA transmitters with pass/fail, printable."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Signals &amp; loop checks</nav>
+<h1>Calibration Sheet Generator</h1>
+<p class="lead no-print">Fill in the instrument details and the measured output at each test point. Expected mA, error in % of span and pass/fail update as you type. Print or save as PDF when done.</p>
+
+<section class="card tool" aria-label="Calibration record">
+  <div class="fields">
+    <div class="field"><label for="tag">Tag number</label><input id="tag" type="text" maxlength="40" value="PT-101"></div>
+    <div class="field"><label for="desc">Description / service</label><input id="desc" type="text" maxlength="80" value="Pressure transmitter"></div>
+    <div class="field"><label for="model">Make / model</label><input id="model" type="text" maxlength="60"></div>
+    <div class="field"><label for="serial">Serial number</label><input id="serial" type="text" maxlength="40"></div>
+    <div class="field"><label for="ref">Reference standard / cert. no.</label><input id="ref" type="text" maxlength="60"></div>
+    <div class="field"><label for="tech">Technician</label><input id="tech" type="text" maxlength="40"></div>
+    <div class="field"><label for="date">Date</label><input id="date" type="date"></div>
+  </div>
+  <hr class="sep">
+  <div class="fields">
+    <div class="field"><label for="lrv">LRV (input at 0 %)</label><input id="lrv" type="number" step="any" inputmode="decimal" value="0"></div>
+    <div class="field"><label for="urv">URV (input at 100 %)</label><input id="urv" type="number" step="any" inputmode="decimal" value="10"></div>
+    <div class="field"><label for="unit">Input unit</label><input id="unit" type="text" maxlength="20" value="bar"></div>
+    <div class="field"><label for="tol">Tolerance (± % of span)</label><input id="tol" type="number" step="any" inputmode="decimal" value="0.5" min="0"></div>
+    <div class="field"><label for="mode">Output transfer function</label><select id="mode"><option value="linear">Linear</option><option value="sqrt">Square root</option></select></div>
+  </div>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="table-wrap">
+    <table id="tbl">
+      <caption class="hint" style="text-align:left">Output 4–20 mA. Error = (measured − expected) / 16 mA × 100 % of span.</caption>
+      <thead><tr><th scope="col">Point</th><th scope="col">Input</th><th scope="col">Expected mA</th><th scope="col">As-found mA</th><th scope="col">Error %</th><th scope="col">Result</th><th scope="col">As-left mA</th><th scope="col">Error %</th><th scope="col">Result</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <div class="print-only" style="margin-top:24px">
+    <p>Remarks: ______________________________________________</p>
+    <p>Calibrated by: __________________ &nbsp; Checked by: __________________ &nbsp; Signature / date: __________________</p>
+  </div>
+  <div class="actions"><button id="print" type="button">Print / save PDF</button><button id="copy-result" type="button" class="secondary">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><button id="clear" type="button" class="secondary">Clear readings</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this tool does</h2>
+<p>It produces a 5-point (0, 25, 50, 75, 100 %) calibration record for a 4–20 mA transmitter: the input to apply at each point, the expected output, the as-found and as-left errors in percent of span, and pass/fail against your tolerance. The whole sheet – including readings – is stored in the page link, so you can bookmark it or send it to a colleague. Nothing is uploaded anywhere.</p>
+<h2>Formula</h2>
+<pre class="formula">Input applied   = LRV + (URV − LRV) × p / 100
+Expected (lin.) = 4 + 16 × p / 100  mA
+Expected (sqrt) = 4 + 16 × √(p / 100)  mA
+Error % span    = (measured − expected) / 16 × 100
+Pass            ⇔ |error| ≤ tolerance</pre>
+<h2>Worked example</h2>
+<p>A 0–10 bar transmitter, tolerance ±0.5 % of span. At 50 % (5 bar applied) the expected output is 12.000 mA. As-found reading 12.10 mA → error = 0.10 / 16 × 100 = <strong>+0.625 % → FAIL</strong>. After trimming, as-left 12.01 mA → +0.0625 % → <strong>PASS</strong>.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li>Calculating error as % of reading instead of % of span – the tolerance in most site procedures is % of span (calibrated range).</li>
+  <li>Using a reference standard that is not at least 3–4 times more accurate than the tolerance (test uncertainty ratio).</li>
+  <li>Not recording as-found before adjusting – as-found data shows drift and is required for interval analysis.</li>
+  <li>Ignoring hysteresis: for critical loops also test downscale (100 → 0 %).</li>
+  <li>Not stabilising the pressure/temperature before reading, or forgetting the head correction when the calibrator is not at transmitter level.</li>
+</ul>
+<h2>Standards and good practice</h2>
+<ul>
+  <li>ISO/IEC 17025 and ISO 10012 – measurement management and calibration records (traceability, as-found / as-left).</li>
+  <li>IEC 61298-2 – process measurement and control devices, test methods (measured error and hysteresis at points across the span).</li>
+  <li>IEC 61511 – proof testing of safety instrumented functions requires as-found records.</li>
+</ul>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../pressure-unit-converter/">Pressure unit converter</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { calibrationSheet, DEFAULT_POINTS } from '../js/calc/calibration.js';
+import { $, readNum, fmt, restoreFromQuery, writeQuery, setMsg, setupCopyButtons } from '../js/ui.js';
+
+const body = $('tbl').tBodies[0];
+DEFAULT_POINTS.forEach((p, i) => {
+  const tr = body.insertRow();
+  tr.innerHTML = `<td>${p} %</td><td id="in${i}"></td><td id="ex${i}"></td>` +
+    `<td><input id="af${i}" type="number" step="any" inputmode="decimal" aria-label="As-found mA at ${p} %"></td><td id="afe${i}"></td><td id="afr${i}"></td>` +
+    `<td><input id="al${i}" type="number" step="any" inputmode="decimal" aria-label="As-left mA at ${p} %"></td><td id="ale${i}"></td><td id="alr${i}"></td>`;
+});
+const READ_IDS = DEFAULT_POINTS.flatMap((_, i) => [`af${i}`, `al${i}`]);
+const IDS = ['tag', 'desc', 'model', 'serial', 'ref', 'tech', 'date', 'lrv', 'urv', 'unit', 'tol', 'mode', ...READ_IDS];
+if (!restoreFromQuery(IDS)) $('date').value = new Date().toISOString().slice(0, 10);
+let resultText = '';
+
+function verdict(cell, r) {
+  cell.textContent = r ? (r.pass ? 'PASS' : 'FAIL') : '';
+  cell.className = r ? (r.pass ? 'pass' : 'fail') : '';
+}
+
+function update() {
+  writeQuery(IDS);
+  setMsg('msg', ''); $('result').textContent = ''; resultText = '';
+  const unit = $('unit').value.trim();
+  let s;
+  try {
+    s = calibrationSheet({
+      lrv: readNum($('lrv')), urv: readNum($('urv')), tolerance: readNum($('tol')), mode: $('mode').value,
+      asFound: DEFAULT_POINTS.map((_, i) => readNum($(`af${i}`))), asLeft: DEFAULT_POINTS.map((_, i) => readNum($(`al${i}`))),
+    });
+  } catch (e) { setMsg('msg', e.message, 'bad'); return; }
+  s.rows.forEach((r, i) => {
+    $(`in${i}`).textContent = `${fmt(r.input, 4)} ${unit}`;
+    $(`ex${i}`).textContent = fmt(r.expected, 3);
+    $(`afe${i}`).textContent = r.asFound ? fmt(r.asFound.err, 3) : '';
+    $(`ale${i}`).textContent = r.asLeft ? fmt(r.asLeft.err, 3) : '';
+    verdict($(`afr${i}`), r.asFound); verdict($(`alr${i}`), r.asLeft);
+  });
+  const sum = (name, x) => x.pass === null ? `${name}: not entered` : `${name}: ${x.pass ? 'PASS' : 'FAIL'} (max error ${fmt(x.maxAbsErr, 3)} % of span, ${x.entered}/5 points)`;
+  const tol = readNum($('tol'));
+  const line1 = `${$('tag').value} – ${sum('As-found', s.asFound)}; ${sum('As-left', s.asLeft)}. Tolerance ±${tol} % of span, range ${$('lrv').value} to ${$('urv').value} ${unit}.`;
+  resultText = line1;
+  const st = document.createElement('strong'); st.textContent = sum('As-found', s.asFound);
+  const st2 = document.createElement('strong'); st2.textContent = sum('As-left', s.asLeft);
+  $('result').append(st, document.createElement('br'), st2);
+  if (s.asFound.pass === false || s.asLeft.pass === false) setMsg('msg', s.asLeft.pass === false ? 'As-left is out of tolerance – the instrument must not be returned to service as is.' : 'As-found out of tolerance – record it and assess the impact on the process / SIF since the last calibration.', s.asLeft.pass === false ? 'bad' : 'warn');
+}
+
+document.querySelector('.tool').addEventListener('input', update);
+document.querySelector('.tool').addEventListener('change', update);
+$('print').addEventListener('click', () => window.print());
+$('clear').addEventListener('click', () => { READ_IDS.forEach((id) => { $(id).value = ''; }); update(); });
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>
