@@ -79,7 +79,11 @@ export function radioValue(name) {
 export function setFieldError(id, msg) {
   const el = $(id);
   const err = $(`${id}-err`);
-  if (el) el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  if (el) {
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    if (msg && err) el.setAttribute('aria-describedby', err.id);
+    else el.removeAttribute('aria-describedby');
+  }
   if (err) err.textContent = msg || '';
 }
 
