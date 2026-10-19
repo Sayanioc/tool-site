@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sayanioc.github.io/tool-site/sitemap.xml

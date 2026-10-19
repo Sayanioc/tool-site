@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4-20 mA Loop Power &amp; Max Loop Resistance Calculator (HART 250 Ω) | LoopCalc</title>
+<meta name="description" content="Check a 4-20 mA loop power budget: maximum loop resistance, voltage at the transmitter terminals, cable and barrier resistance, minimum supply voltage and HART 230 Ω requirement.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/loop-power-calculator/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"4-20 mA Loop Power and Loop Resistance Calculator","url":"https://sayanioc.github.io/tool-site/loop-power-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Maximum loop resistance, transmitter terminal voltage and minimum supply voltage for 4-20 mA / HART loops."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Signals &amp; loop checks</nav>
+<h1>4-20 mA Loop Power &amp; Loop Resistance Calculator</h1>
+<p class="lead">Will the transmitter get enough voltage? Add up the AI card, barrier and cable resistance, compare with the maximum loop resistance the power supply can drive, and check the HART load requirement.</p>
+
+<section class="card tool" aria-label="Calculator">
+  <div class="fields">
+    <div class="field"><label for="vs">Power supply voltage (V DC)</label><input id="vs" type="number" step="any" inputmode="decimal" value="24"><p class="hint">Use the minimum supply voltage (e.g. 24 V − tolerance).</p></div>
+    <div class="field"><label for="vmin">Transmitter minimum voltage (V)</label><input id="vmin" type="number" step="any" inputmode="decimal" value="10.5"><p class="hint">Lift-off voltage from the datasheet (often higher with HART, display or SIL options).</p></div>
+    <div class="field"><label for="imax">Maximum loop current (mA)</label><input id="imax" type="number" step="any" inputmode="decimal" value="23"><p class="hint">Include upscale alarm current (21–23 mA).</p></div>
+    <div class="field"><label for="rl">AI card / sense resistor (Ω)</label><input id="rl" type="number" step="any" inputmode="decimal" value="250"></div>
+    <div class="field"><label for="rb">Barrier / isolator resistance (Ω)</label><input id="rb" type="number" step="any" inputmode="decimal" value="0"><p class="hint">Use the end-to-end resistance or convert its voltage drop: R = ΔV / I.</p></div>
+    <div class="field"><label for="ro">Other series resistance (Ω)</label><input id="ro" type="number" step="any" inputmode="decimal" value="0"><p class="hint">Indicators, fuses, terminals.</p></div>
+    <div class="field"><label for="len">Cable length, one way (m)</label><input id="len" type="number" step="any" inputmode="decimal" value="500"></div>
+    <div class="field"><label for="csa">Conductor size</label><select id="csa"><option value="0.5">0.5 mm² (36.0 Ω/km)</option><option value="0.75">0.75 mm² (24.5 Ω/km)</option><option value="1" selected>1.0 mm² (18.1 Ω/km)</option><option value="1.5">1.5 mm² (12.1 Ω/km)</option><option value="2.5">2.5 mm² (7.41 Ω/km)</option><option value="custom">Other…</option></select></div>
+    <div class="field"><label for="rkm">Conductor resistance (Ω/km)</label><input id="rkm" type="number" step="any" inputmode="decimal" value="18.1"><p class="hint">Per conductor at 20 °C (IEC 60228 max, plain copper).</p></div>
+    <fieldset class="field"><legend>Communication</legend><div class="radios"><label><input id="hart" type="checkbox" checked> HART loop</label></div></fieldset>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this calculator does</h2>
+<p>A 2-wire transmitter is powered by the same loop it signals on. Every resistance in series – the AI card's sense resistor, intrinsic-safety barrier or isolator, cable and any loop indicator – drops voltage, and what is left at the transmitter terminals must stay above its minimum operating (lift-off) voltage even at the highest current the transmitter can drive. This tool checks that budget.</p>
+<h2>Formula</h2>
+<pre class="formula">R_cable = 2 × L × r / 1000                 (two conductors)
+R_total = R_card + R_barrier + R_other + R_cable
+R_max   = (V_supply − V_min) / I_max
+V_tx    = V_supply − I_max × R_total        must be ≥ V_min
+V_supply(min) = V_min + I_max × R_total</pre>
+<h2>Worked example</h2>
+<p>24 V supply, transmitter minimum 10.5 V, 23 mA maximum, 250 Ω AI card, 500 m of 1.0 mm² cable (2 × 0.5 km × 18.1 Ω/km = 18.1 Ω). R_total = 268.1 Ω. R_max = (24 − 10.5) / 0.023 = <strong>587 Ω</strong>, so there is 319 Ω of margin. Voltage at the transmitter at 23 mA = 24 − 0.023 × 268.1 = <strong>17.83 V</strong> ≥ 10.5 V → OK.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li>Checking at 20 mA only: the transmitter must still work when it drives its upscale alarm (≥ 21 mA per NAMUR NE 43, often 22.5–23 mA).</li>
+  <li>Ignoring the IS barrier: a shunt-diode barrier can be 300 Ω or more end-to-end; isolators often specify a voltage drop instead.</li>
+  <li>Using the transmitter's basic lift-off voltage when HART, a local display, or SIL options raise it.</li>
+  <li>Removing the 250 Ω resistor when moving to a low-impedance input: HART needs at least 230 Ω in the loop to communicate.</li>
+  <li>Counting the cable length once – the loop current flows out and back through two conductors.</li>
+</ul>
+<h2>Standards and references</h2>
+<ul>
+  <li>IEC 60381-1 – 4–20 mA analogue signals; NAMUR NE 43 – failure signal levels.</li>
+  <li>HART Communication Foundation physical layer (FSK) – loop resistance 230–1100 Ω.</li>
+  <li>IEC 60228 – conductor resistance of copper cables (max values at 20 °C).</li>
+  <li>Transmitter datasheet load diagram (e.g. "R_max = 43.5 × (V − 10.5)" equals 1 / 23 mA).</li>
+</ul>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../calibration-sheet/">Calibration sheet generator</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { loopBudget, minSupply, COPPER_OHM_PER_KM } from '../js/calc/loop-power.js';
+import { $, readNum, fmt, restoreFromQuery, writeQuery, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
+
+const IDS = ['vs', 'vmin', 'imax', 'rl', 'rb', 'ro', 'len', 'csa', 'rkm', 'hart'];
+const q = new URLSearchParams(location.search);
+restoreFromQuery(IDS);
+if (q.toString() && !q.has('hart')) $('hart').checked = false;
+let resultText = '';
+
+function update() {
+  writeQuery(IDS);
+  setMsg('msg', ''); $('result').textContent = ''; resultText = '';
+  const v = Object.fromEntries(['vs', 'vmin', 'imax', 'rl', 'rb', 'ro', 'len', 'rkm'].map((k) => [k, readNum($(k))]));
+  try {
+    for (const [k, x] of Object.entries(v)) if (Number.isNaN(x)) throw new RangeError(`Enter a value for ${$(k).labels[0].textContent}.`);
+    const r = loopBudget({ vSupply: v.vs, vMin: v.vmin, iMaxMA: v.imax, rLoad: v.rl, rBarrier: v.rb, rOther: v.ro, lengthM: v.len, ohmPerKm: v.rkm, hart: $('hart').checked });
+    const vNeed = minSupply({ vMin: v.vmin, iMaxMA: v.imax, rTotal: r.rTotal });
+    resultText = `Loop ${r.ok ? 'OK' : 'NOT OK'}: R_total = ${fmt(r.rTotal, 1)} Ω (cable ${fmt(r.rCable, 1)} Ω), R_max = ${fmt(r.rMax, 1)} Ω, V at transmitter = ${fmt(r.vTx, 2)} V at ${v.imax} mA (min ${v.vmin} V), minimum supply ${fmt(vNeed, 2)} V`;
+    const s = document.createElement('strong'); s.className = r.ok ? 'pass' : 'fail';
+    s.textContent = r.ok ? `OK – ${fmt(r.marginOhm, 1)} Ω margin` : `NOT OK – ${fmt(-r.marginOhm, 1)} Ω too much resistance`;
+    $('result').append(s, document.createElement('br'),
+      `Total loop resistance ${fmt(r.rTotal, 1)} Ω (cable ${fmt(r.rCable, 1)} Ω) · maximum ${fmt(r.rMax, 1)} Ω`, document.createElement('br'),
+      `Voltage at transmitter: ${fmt(r.vTx, 2)} V at ${v.imax} mA, ${fmt(r.vTx4, 2)} V at 4 mA · minimum supply needed ${fmt(vNeed, 2)} V`);
+    if (r.warnings.length) setMsg('msg', r.warnings.join(' '), 'warn');
+  } catch (e) {
+    setMsg('msg', e.message, 'bad');
+  }
+}
+$('csa').addEventListener('change', () => { const r = COPPER_OHM_PER_KM[$('csa').value]; if (r) $('rkm').value = r; update(); });
+$('rkm').addEventListener('input', () => { const m = Object.entries(COPPER_OHM_PER_KM).find(([, r]) => String(r) === $('rkm').value); $('csa').value = m ? m[0] : 'custom'; });
+onAnyInput(IDS, update);
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>

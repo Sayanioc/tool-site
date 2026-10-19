@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LoopCalc – Free Instrumentation &amp; Control Calculators (4-20 mA, RTD, Thermocouple, DP Level)</title>
+<meta name="description" content="Free, accurate calculators for instrumentation and control engineers: 4-20 mA scaling, pressure units incl. kg/cm², Pt100 RTD (IEC 60751), thermocouples (NIST ITS-90), DP level ranging and calibration sheets.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LoopCalc – Instrumentation &amp; Control Calculators">
+<meta property="og:description" content="Accurate, fast, free calculators for I&amp;C engineers and technicians in refineries and process plants.">
+<meta property="og:url" content="https://sayanioc.github.io/tool-site/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"LoopCalc","url":"https://sayanioc.github.io/tool-site/","description":"Free instrumentation and control calculators for process plants."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="./"><img src="favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="#calculators">Calculators</a><a href="#about">About</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<h1>Instrumentation &amp; Control Calculators</h1>
+<p class="lead">Free, fast and standards-based tools for I&amp;C engineers and technicians in refineries and process plants. Every formula is cited, every calculator is unit-tested against published reference tables, and every result has a shareable link.</p>
+
+<div id="calculators">
+<section class="cat" aria-labelledby="cat-signal">
+  <h2 id="cat-signal">Signals &amp; loop checks</h2>
+  <div class="grid">
+    <!--ma--><a class="card tool-link" href="4-20ma-calculator/"><strong>4-20 mA scaling calculator</strong><span>mA ↔ % ↔ engineering units, linear or square-root (DP flow), check table, NAMUR NE 43.</span></a><!--/ma-->
+    <!--cal--><a class="card tool-link" href="calibration-sheet/"><strong>Calibration sheet generator</strong><span>5-point as-found / as-left record with expected mA, error % of span, pass/fail. Printable.</span></a><!--/cal-->
+    <!--loop--><a class="card tool-link" href="loop-power-calculator/"><strong>Loop power &amp; resistance check</strong><span>Max loop resistance, voltage at the transmitter, cable and barrier drop, HART 250 Ω.</span></a><!--/loop-->
+  </div>
+</section>
+<section class="cat" aria-labelledby="cat-press">
+  <h2 id="cat-press">Pressure &amp; level</h2>
+  <div class="grid">
+    <!--press--><a class="card tool-link" href="pressure-unit-converter/"><strong>Pressure unit converter</strong><span>bar, mbar, psi, kPa, MPa, kg/cm², mmH₂O, inH₂O, mmHg, atm – gauge and absolute.</span></a><!--/press-->
+    <!--dp--><a class="card tool-link" href="dp-level-calculator/"><strong>DP level transmitter range</strong><span>LRV/URV for open tank, dry leg, wet leg or remote seals – with step-by-step working.</span></a><!--/dp-->
+  </div>
+</section>
+<section class="cat" aria-labelledby="cat-temp">
+  <h2 id="cat-temp">Temperature</h2>
+  <div class="grid">
+    <!--rtd--><a class="card tool-link" href="rtd-pt100-calculator/"><strong>RTD Pt100 / Pt1000 calculator</strong><span>°C ↔ Ω per IEC 60751 Callendar-Van Dusen, class A/B tolerance, resistance table.</span></a><!--/rtd-->
+    <!--tc--><a class="card tool-link" href="thermocouple-calculator/"><strong>Thermocouple mV calculator</strong><span>Types K, J, T, E, N, R, S, B – °C ↔ mV with cold-junction compensation (NIST ITS-90).</span></a><!--/tc-->
+    <!--temp--><a class="card tool-link" href="temperature-converter/"><strong>Temperature converter</strong><span>°C, °F, K, °R – including temperature differences for spans and tolerances.</span></a><!--/temp-->
+  </div>
+</section>
+<section class="cat" aria-labelledby="cat-flow">
+  <h2 id="cat-flow">Flow &amp; control valves</h2>
+  <div class="grid">
+    <!--cv--><a class="card tool-link" href="control-valve-cv-calculator/"><strong>Control valve Cv / Kv (liquid)</strong><span>IEC 60534-2-1 non-choked liquid sizing with choked-flow and flashing checks.</span></a><!--/cv-->
+  </div>
+</section>
+</div>
+
+<section id="about" class="doc" aria-labelledby="about-h">
+  <h2 id="about-h">Why trust these calculators?</h2>
+  <ul>
+    <li><strong>Standard formulas only</strong> – IEC 60751 for RTDs, NIST ITS-90 reference functions for thermocouples, IEC 60534-2-1 for control valves. The standard is cited on every page.</li>
+    <li><strong>Tested</strong> – the math lives in small pure JavaScript modules with automated tests against published reference values (e.g. Pt100 at 100 °C = 138.5055 Ω, type K at 100 °C = 4.096 mV).</li>
+    <li><strong>Private and fast</strong> – everything runs in your browser. No sign-up, no trackers, no ads, works offline once loaded.</li>
+    <li><strong>Plant units</strong> – SI and °C by default, with kg/cm², mmH2O and other units used in Indian and international plants.</li>
+  </ul>
+</section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p>LoopCalc – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+</body>
+</html>

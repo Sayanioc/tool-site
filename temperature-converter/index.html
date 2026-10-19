@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Temperature Converter – °C, °F, K, °R and Temperature Difference | LoopCalc</title>
+<meta name="description" content="Convert temperature between Celsius, Fahrenheit, Kelvin and Rankine instantly, including temperature differences for transmitter spans, errors and tolerances (1 °C span = 1.8 °F).">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/temperature-converter/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Temperature Converter","url":"https://sayanioc.github.io/tool-site/temperature-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert °C, °F, K and °R, including temperature differences for spans and tolerances."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Temperature</nav>
+<h1>Temperature Converter (°C, °F, K, °R)</h1>
+<p class="lead">Type in any box – the others update instantly. Switch to <em>temperature difference</em> to convert spans, errors and tolerances, where no offset is applied.</p>
+
+<section class="card tool" aria-label="Converter">
+  <fieldset><legend>Convert</legend><div class="radios">
+    <label><input type="radio" name="mode" value="abs" checked> Temperature</label>
+    <label><input type="radio" name="mode" value="diff"> Temperature difference (span, error, tolerance)</label></div></fieldset>
+  <div class="fields big" style="margin-top:12px">
+    <div class="field"><label for="u-C">Celsius (°C)</label><input id="u-C" type="number" step="any" inputmode="decimal"></div>
+    <div class="field"><label for="u-F">Fahrenheit (°F)</label><input id="u-F" type="number" step="any" inputmode="decimal"></div>
+    <div class="field"><label for="u-K">Kelvin (K)</label><input id="u-K" type="number" step="any" inputmode="decimal"></div>
+    <div class="field"><label for="u-R">Rankine (°R)</label><input id="u-R" type="number" step="any" inputmode="decimal"></div>
+  </div>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this converter does</h2>
+<p>It converts temperatures between the Celsius, Fahrenheit, Kelvin and Rankine scales. In difference mode it converts temperature <em>intervals</em> – a transmitter span, a calibration error or a tolerance – which scale by 1.8 between °C and °F with no 32° offset.</p>
+<h2>Formula</h2>
+<pre class="formula">K  = °C + 273.15          °F = °C × 9/5 + 32
+°R = K × 9/5 = °F + 459.67
+Differences: Δ°C = ΔK,  Δ°F = Δ°R = 1.8 × Δ°C</pre>
+<h2>Worked example</h2>
+<p>A transmitter is ranged 0–400 °C. In °F the range is 32–752 °F, but its <strong>span</strong> is 400 × 1.8 = <strong>720 °F</strong>. A ±0.5 °C tolerance is ±0.9 °F, not ±32.9 °F.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li>Adding the 32° offset to a span, error or tolerance – use difference mode.</li>
+  <li>Using 273 instead of 273.15 for kelvin (0.15 K error).</li>
+  <li>Writing "°K" – the kelvin has no degree sign.</li>
+</ul>
+<h2>Standard</h2>
+<p>BIPM SI Brochure (9th ed.) – kelvin and degree Celsius definitions; ITS-90 temperature scale; NIST SP 811 for °F and °R.</p>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../rtd-pt100-calculator/">Pt100 / Pt1000 RTD calculator</a></li>
+  <li><a href="../thermocouple-calculator/">Thermocouple mV calculator</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { convertTemperature, T_UNITS } from '../js/calc/temperature.js';
+import { $, readNum, fmtSig, radioValue, setMsg, setupCopyButtons } from '../js/ui.js';
+
+const U = Object.keys(T_UNITS);
+const q = new URLSearchParams(location.search);
+let src = T_UNITS[q.get('u')] ? q.get('u') : 'C';
+$(`u-${src}`).value = q.has('v') ? q.get('v') : '100';
+if (q.get('mode') === 'diff') document.querySelector('input[name=mode][value=diff]').checked = true;
+let resultText = '';
+
+function update() {
+  setMsg('msg', ''); resultText = '';
+  const diff = radioValue('mode') === 'diff';
+  history.replaceState(null, '', `?${new URLSearchParams({ u: src, v: $(`u-${src}`).value, mode: diff ? 'diff' : 'abs' })}`);
+  const v = readNum($(`u-${src}`));
+  if (Number.isNaN(v)) { U.forEach((k) => { if (k !== src) $(`u-${k}`).value = ''; }); return; }
+  try {
+    const out = U.map((k) => [k, convertTemperature(v, src, k, diff)]);
+    out.forEach(([k, x]) => { if (k !== src) $(`u-${k}`).value = fmtSig(x, 8); });
+    resultText = (diff ? 'Temperature difference: ' : '') + out.map(([k, x]) => `${diff ? 'Δ' : ''}${fmtSig(x, 8)} ${T_UNITS[k].label}`).join(' = ');
+  } catch (e) {
+    setMsg('msg', e.message, 'bad');
+    U.forEach((k) => { if (k !== src) $(`u-${k}`).value = ''; });
+  }
+}
+U.forEach((k) => $(`u-${k}`).addEventListener('input', () => { src = k; update(); }));
+document.querySelectorAll('input[name=mode]').forEach((r) => r.addEventListener('change', update));
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>

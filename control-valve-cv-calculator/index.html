@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Valve Cv / Kv Calculator for Liquids (IEC 60534-2-1) | LoopCalc</title>
+<meta name="description" content="Size a control valve for liquid service: Cv and Kv per IEC 60534-2-1 for turbulent non-choked flow, with choked-flow (FL, FF) and flashing checks. Units m³/h, L/min, gpm, bar, kg/cm², psi.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/control-valve-cv-calculator/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Control Valve Cv / Kv Calculator (Liquid)","url":"https://sayanioc.github.io/tool-site/control-valve-cv-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Liquid control valve Cv and Kv per IEC 60534-2-1, non-choked turbulent flow, with choked-flow check."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Flow &amp; control valves</nav>
+<h1>Control Valve Cv / Kv Calculator (Liquid)</h1>
+<p class="lead">Required flow coefficient for a control valve in liquid service per IEC 60534-2-1, for turbulent, <strong>non-choked</strong> flow. The tool checks for choked flow and flashing and refuses to give a Cv when the simple equation does not apply.</p>
+
+<section class="card tool" aria-label="Calculator">
+  <div class="fields">
+    <div class="field"><label for="q">Flow rate</label><input id="q" type="number" step="any" inputmode="decimal" value="360"><p class="err" id="q-err"></p></div>
+    <div class="field"><label for="qu">Flow unit</label><select id="qu"><option value="m3h">m³/h</option><option value="lmin">L/min</option><option value="gpm">US gpm</option></select></div>
+    <div class="field"><label for="sg">Specific gravity ρ1/ρ0</label><input id="sg" type="number" step="any" inputmode="decimal" value="0.9654"><p class="hint">At flowing temperature; water at 15 °C = 1.</p></div>
+    <div class="field"><label for="pu">Pressure unit</label><select id="pu"><option value="bar">bar</option><option value="kPa">kPa</option><option value="kgcm2">kg/cm²</option><option value="MPa">MPa</option><option value="psi">psi</option></select></div>
+    <fieldset class="field"><legend>Pressures are</legend><div class="radios">
+      <label><input type="radio" name="ref" value="abs" checked> Absolute</label>
+      <label><input type="radio" name="ref" value="gauge"> Gauge</label></div><p class="hint">Gauge values are converted with 1.01325 bar standard atmosphere.</p></fieldset>
+    <div class="field"><label for="p1">Inlet pressure p1</label><input id="p1" type="number" step="any" inputmode="decimal" value="6.8"></div>
+    <div class="field"><label for="p2">Outlet pressure p2</label><input id="p2" type="number" step="any" inputmode="decimal" value="2.2"></div>
+    <div class="field"><label for="pv">Vapour pressure pv (always absolute)</label><input id="pv" type="number" step="any" inputmode="decimal" value="0.701"></div>
+    <div class="field"><label for="pc">Critical pressure pc (absolute)</label><input id="pc" type="number" step="any" inputmode="decimal" value="220.64"><p class="hint">Water 220.64 bar(a).</p></div>
+    <div class="field"><label for="fl">Liquid pressure recovery factor FL</label><input id="fl" type="number" step="any" inputmode="decimal" value="0.9"><p class="hint">From the valve datasheet. Typical: globe 0.85–0.9, ball 0.55–0.6, butterfly 0.55–0.7.</p></div>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this calculator does</h2>
+<p>It calculates the flow coefficient (Kv or Cv) a control valve needs to pass a given liquid flow at a given pressure drop, and checks the drop against the choked-flow limit. Pick a valve whose rated Cv gives roughly 20–80 % travel at the design flow.</p>
+<h2>Formula (IEC 60534-2-1, incompressible fluids)</h2>
+<pre class="formula">Kv = Q × √( (ρ1/ρ0) / Δp )            Q in m³/h, Δp in bar   (N1 = 1)
+Cv = Q / 0.865 × √( (ρ1/ρ0) / Δp )    = 1.156 × Kv           (N1 = 0.865)
+US form: Cv = gpm × √( SG / Δp[psi] )
+
+Choked-flow check:
+FF        = 0.96 − 0.28 × √(pv / pc)
+Δp_choked = FL² × (p1 − FF × pv)       (Fp = 1)
+Valid only if Δp &lt; Δp_choked</pre>
+<h2>Worked example (IEC 60534-2-1 Annex D)</h2>
+<p>Water at 90 °C (ρ1 = 965.4 kg/m³, pv = 0.701 bar a, pc = 221.2 bar a), Q = 360 m³/h, p1 = 6.8 bar a, p2 = 2.2 bar a, globe valve FL = 0.90. FF = 0.96 − 0.28√(0.701/221.2) = 0.944. Δp_choked = 0.81 × (6.8 − 0.944 × 0.701) = 4.97 bar &gt; Δp = 4.6 bar, so the flow is not choked. Kv = 360 × √(0.9654 / 4.6) = <strong>165</strong>, Cv = <strong>191</strong>.</p>
+<h2>Limits – read before use</h2>
+<ul>
+  <li><strong>Non-choked, turbulent flow only.</strong> If Δp ≥ Δp_choked the flow is choked (cavitating or flashing); the valve capacity is limited and the full IEC procedure plus a cavitation/noise assessment is needed.</li>
+  <li>Piping geometry factor Fp = 1: valve the same size as the pipe, no reducers. With reducers the required C is higher.</li>
+  <li>Reynolds number factor FR = 1: valid for low-viscosity liquids (water, light hydrocarbons). Viscous liquids need the IEC Reynolds correction.</li>
+  <li>Single-phase Newtonian liquid. Not for gas, steam, two-phase or slurries.</li>
+</ul>
+<h2>Common mistakes</h2>
+<ul>
+  <li>Using gauge pressures in the choked-flow check – p1, pv and pc must be absolute.</li>
+  <li>Sizing at maximum flow only; check minimum and normal flow as well for rangeability.</li>
+  <li>Mixing Cv and Kv (Cv = 1.156 Kv).</li>
+  <li>Using the pump shut-off pressure or a guessed Δp instead of the system Δp at the design flow.</li>
+</ul>
+<h2>Standard</h2>
+<p>IEC 60534-2-1:2011 (ISA-75.01.01) <em>Industrial-process control valves – Part 2-1: Flow capacity – Sizing equations for fluid flow under installed conditions</em>.</p>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../pressure-unit-converter/">Pressure unit converter</a></li>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../dp-level-calculator/">DP level transmitter range</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { liquidCv, flowToM3h, FLOW_UNITS } from '../js/calc/control-valve.js';
+import { convert, UNITS } from '../js/calc/pressure.js';
+import { $, readNum, fmt, restoreFromQuery, writeQuery, radioValue, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
+
+const IDS = ['q', 'qu', 'sg', 'pu', 'p1', 'p2', 'pv', 'pc', 'fl'];
+restoreFromQuery(IDS);
+let resultText = '';
+const ATM_BAR = 1.01325;
+
+function update() {
+  writeQuery(IDS, ['ref']);
+  setMsg('msg', ''); $('result').textContent = ''; resultText = '';
+  const pu = $('pu').value, gauge = radioValue('ref') === 'gauge';
+  const toBarA = (v, isGaugeAllowed = true) => convert(v, pu, 'bar') + (gauge && isGaugeAllowed ? ATM_BAR : 0);
+  try {
+    const vals = Object.fromEntries(['q', 'sg', 'p1', 'p2', 'pv', 'pc', 'fl'].map((k) => [k, readNum($(k))]));
+    for (const [k, v] of Object.entries(vals)) if (Number.isNaN(v)) throw new RangeError(`Enter a value for ${$(k).labels[0].textContent}.`);
+    const r = liquidCv({ q: flowToM3h(vals.q, $('qu').value), sg: vals.sg, fl: vals.fl,
+      p1: toBarA(vals.p1), p2: toBarA(vals.p2), pv: toBarA(vals.pv, false), pc: toBarA(vals.pc, false) });
+    const L = UNITS[pu].label;
+    const dpU = convert(r.dp, 'bar', pu), dpcU = convert(r.dpChoked, 'bar', pu);
+    if (r.choked) {
+      setMsg('msg', `CHOKED FLOW: Δp = ${fmt(dpU, 3)} ${L} ≥ Δp_choked = ${fmt(dpcU, 3)} ${L} (FF = ${fmt(r.ff, 3)}). The non-choked IEC 60534-2-1 equation does not apply – the flow will not increase with more Δp and the valve will ${r.flashing ? 'flash' : 'cavitate'}. Use the full IEC procedure / vendor sizing software.`, 'bad');
+      return;
+    }
+    resultText = `Liquid valve sizing (IEC 60534-2-1, non-choked): Kv = ${fmt(r.kv, 2)}, Cv = ${fmt(r.cv, 2)} for Q = ${vals.q} ${FLOW_UNITS[$('qu').value].label}, Δp = ${fmt(dpU, 3)} ${L}, SG = ${vals.sg}`;
+    const s = document.createElement('strong'); s.textContent = `Kv = ${fmt(r.kv, 2)} · Cv = ${fmt(r.cv, 2)}`;
+    $('result').append(s, document.createElement('br'), `Δp = ${fmt(dpU, 3)} ${L} · Δp_choked = ${fmt(dpcU, 3)} ${L} · FF = ${fmt(r.ff, 3)} · margin ${fmt((1 - r.dp / r.dpChoked) * 100, 1)} %`);
+    if (r.dp > 0.8 * r.dpChoked) setMsg('msg', 'Δp is above 80 % of the choked-flow limit: incipient cavitation may occur before full choking. Check the valve’s incipient-cavitation factor (xFz) with the vendor.', 'warn');
+  } catch (e) {
+    setMsg('msg', e.message, 'bad');
+  }
+}
+onAnyInput([...IDS, 'ref'], update);
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>

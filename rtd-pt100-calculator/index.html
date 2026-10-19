@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pt100 / Pt1000 RTD Calculator – Temperature to Resistance (IEC 60751) | LoopCalc</title>
+<meta name="description" content="Convert Pt100 and Pt1000 RTD temperature to resistance and back with the IEC 60751 Callendar-Van Dusen equation, -200 to 850 °C, with class A/B tolerance and a resistance table.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/rtd-pt100-calculator/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Pt100 / Pt1000 RTD Calculator","url":"https://sayanioc.github.io/tool-site/rtd-pt100-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Pt100 and Pt1000 temperature to resistance and resistance to temperature per IEC 60751."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Temperature</nav>
+<h1>Pt100 / Pt1000 RTD Calculator</h1>
+<p class="lead">Temperature ↔ resistance for platinum RTDs using the IEC 60751 Callendar-Van Dusen equation (α = 0.00385). Type in either box.</p>
+
+<section class="card tool" aria-label="Calculator">
+  <div class="fields">
+    <div class="field"><label for="sensor">Sensor</label><select id="sensor"><option value="100">Pt100 (R0 = 100 Ω)</option><option value="1000">Pt1000 (R0 = 1000 Ω)</option><option value="500">Pt500 (R0 = 500 Ω)</option><option value="custom">Other R0…</option></select></div>
+    <div class="field"><label for="r0">R0 at 0 °C (Ω)</label><input id="r0" type="number" step="any" inputmode="decimal" value="100"><p class="err" id="r0-err"></p></div>
+  </div>
+  <hr class="sep">
+  <div class="fields big">
+    <div class="field"><label for="t">Temperature (°C)</label><input id="t" type="number" step="any" inputmode="decimal" value="100"><p class="hint">−200 to 850 °C</p><p class="err" id="t-err"></p></div>
+    <div class="field"><label for="r">Resistance (Ω)</label><input id="r" type="number" step="any" inputmode="decimal"><p class="err" id="r-err"></p></div>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+  <details style="margin-top:14px"><summary>Resistance table (−200 to 850 °C, 50 °C steps)</summary>
+    <div class="table-wrap"><table id="tbl"><thead><tr><th scope="col">°C</th><th scope="col">Ω</th><th scope="col">°C</th><th scope="col">Ω</th></tr></thead><tbody></tbody></table></div>
+  </details>
+</section>
+
+<article class="doc">
+<h2>What this calculator does</h2>
+<p>It converts between temperature and resistance for industrial platinum resistance thermometers (Pt100, Pt500, Pt1000 or any R0) with the standard IEC 60751 coefficients. Use it to check a transmitter input with a decade box or simulator, to verify a DCS reading, or to diagnose a suspect RTD with a multimeter.</p>
+<h2>Formula – IEC 60751 Callendar-Van Dusen</h2>
+<pre class="formula">For −200 °C ≤ t &lt; 0 °C:  R(t) = R0 [1 + A·t + B·t² + C·(t − 100)·t³]
+For 0 °C ≤ t ≤ 850 °C:   R(t) = R0 [1 + A·t + B·t²]
+
+A = 3.9083 × 10⁻³ °C⁻¹
+B = −5.775 × 10⁻⁷ °C⁻²
+C = −4.183 × 10⁻¹² °C⁻⁴   (used only below 0 °C)
+
+Inverse (t ≥ 0 °C): t = [−A + √(A² − 4B(1 − R/R0))] / (2B)
+Inverse (t &lt; 0 °C):  solved numerically (Newton) to better than 10⁻⁹ °C</pre>
+<h2>Worked example</h2>
+<p>Pt100 at 100 °C: R = 100 × (1 + 3.9083×10⁻³ × 100 − 5.775×10⁻⁷ × 100²) = 100 × (1 + 0.39083 − 0.005775) = <strong>138.5055 Ω</strong>.</p>
+<p>A Pt100 measures 110 Ω: t = [−0.0039083 + √(0.0039083² + 4 × 5.775×10⁻⁷ × 0.1)] / (−1.155×10⁻⁶) = <strong>25.68 °C</strong>.</p>
+<h2>Tolerance classes (IEC 60751)</h2>
+<pre class="formula">Class AA: ±(0.10 + 0.0017·|t|) °C
+Class A:  ±(0.15 + 0.002·|t|) °C
+Class B:  ±(0.30 + 0.005·|t|) °C
+Class C:  ±(0.60 + 0.01·|t|) °C</pre>
+<p>Each class is only valid over a temperature range that depends on construction (wire-wound or thin film) – check the sensor datasheet.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li><strong>Lead-wire resistance</strong> in 2-wire connections adds directly: 2 × 0.5 Ω of copper adds ~1 Ω ≈ +2.6 °C on a Pt100. Use 3- or 4-wire, or subtract the measured loop resistance.</li>
+  <li>Using the α = 0.003926 (US/JIS old) or α = 0.00392 curves with IEC 60751 coefficients – confirm the sensor curve on its datasheet.</li>
+  <li>Using linear 0.385 Ω/°C everywhere: at 400 °C the linear estimate is 254.0 Ω vs 247.09 Ω actual (≈ 18 °C error).</li>
+  <li>Self-heating: measuring with a multimeter current that is too high warms the element.</li>
+</ul>
+<h2>Standard</h2>
+<p>IEC 60751:2022 <em>Industrial platinum resistance thermometers and platinum temperature sensors</em> (also EN 60751, ASTM E1137 uses the same A, B, C). Temperatures are on ITS-90.</p>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../thermocouple-calculator/">Thermocouple mV calculator</a></li>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../calibration-sheet/">Calibration sheet generator</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { resistance, temperature, sensitivity, tolerance } from '../js/calc/rtd.js';
+import { $, readNum, fmt, setFieldError, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
+
+const q = new URLSearchParams(location.search);
+let src = q.get('src') === 'r' ? 'r' : 't';
+if (q.has('r0')) $('r0').value = q.get('r0');
+if (q.has(src)) $(src).value = q.get(src);
+$('sensor').value = ['100', '1000', '500'].includes($('r0').value) ? $('r0').value : 'custom';
+let resultText = '';
+
+function update() {
+  ['r0', 't', 'r'].forEach((id) => setFieldError(id, ''));
+  setMsg('msg', '');
+  $('result').textContent = ''; resultText = '';
+  const r0 = readNum($('r0'));
+  history.replaceState(null, '', `?${new URLSearchParams({ r0: $('r0').value, src, [src]: $(src).value })}`);
+  if (!(r0 > 0)) { setFieldError('r0', 'R0 must be a positive number.'); return; }
+  renderTable(r0);
+  const v = readNum($(src));
+  const other = src === 't' ? 'r' : 't';
+  if (Number.isNaN(v)) { $(other).value = ''; return; }
+  try {
+    const t = src === 't' ? v : temperature(v, r0);
+    const r = src === 'r' ? v : resistance(t, r0);
+    $(other).value = src === 't' ? fmt(r, 4) : fmt(t, 3);
+    const name = r0 === 100 ? 'Pt100' : r0 === 1000 ? 'Pt1000' : `Pt (R0 = ${r0} Ω)`;
+    resultText = `${name}: ${fmt(t, 3)} °C = ${fmt(r, 4)} Ω (IEC 60751)`;
+    const s = document.createElement('strong'); s.textContent = resultText;
+    $('result').append(s, document.createElement('br'),
+      `Sensitivity ${fmt(sensitivity(t, r0), 4)} Ω/°C · Class A ±${fmt(tolerance(t, 'A'), 2)} °C · Class B ±${fmt(tolerance(t, 'B'), 2)} °C`);
+  } catch (e) {
+    setFieldError(src, e.message); $(other).value = '';
+  }
+}
+
+function renderTable(r0) {
+  const body = $('tbl').tBodies[0]; body.textContent = '';
+  const ts = []; for (let t = -200; t <= 850; t += 50) ts.push(t);
+  const half = Math.ceil(ts.length / 2);
+  for (let i = 0; i < half; i++) {
+    const tr = body.insertRow();
+    [ts[i], ts[i + half]].forEach((t) => {
+      tr.insertCell().textContent = t === undefined ? '' : t;
+      tr.insertCell().textContent = t === undefined ? '' : fmt(resistance(t, r0), r0 >= 1000 ? 2 : 3);
+    });
+  }
+}
+
+$('sensor').addEventListener('change', () => { if ($('sensor').value !== 'custom') $('r0').value = $('sensor').value; update(); });
+$('r0').addEventListener('input', () => { $('sensor').value = ['100', '1000', '500'].includes($('r0').value) ? $('r0').value : 'custom'; update(); });
+$('t').addEventListener('input', () => { src = 't'; update(); });
+$('r').addEventListener('input', () => { src = 'r'; update(); });
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>

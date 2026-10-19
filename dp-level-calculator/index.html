@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DP Level Transmitter Calculator – LRV/URV for Wet Leg, Dry Leg &amp; Remote Seals | LoopCalc</title>
+<meta name="description" content="Calculate DP level transmitter LRV and URV from tap heights, liquid SG, dry leg, wet leg or remote diaphragm seals with capillary fill SG. Step-by-step working in mmH2O, kPa, mbar or inH2O.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/dp-level-calculator/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"DP Level Transmitter Range Calculator","url":"https://sayanioc.github.io/tool-site/dp-level-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"LRV and URV for differential pressure level transmitters with dry leg, wet leg or remote seals, with step-by-step working."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Pressure &amp; level</nav>
+<h1>DP Level Transmitter Range Calculator</h1>
+<p class="lead">Work out the LRV and URV (zero suppression or elevation) for a differential pressure level transmitter on an open tank, a closed tank with dry or wet leg, or with remote diaphragm seals. Heights in millimetres; the working is shown step by step.</p>
+
+<section class="card tool" aria-label="Calculator">
+  <fieldset><legend>Installation</legend><div class="radios">
+    <label><input type="radio" name="config" value="dry" checked> Open tank / dry leg</label>
+    <label><input type="radio" name="config" value="wet"> Closed tank, wet leg</label>
+    <label><input type="radio" name="config" value="seals"> Remote seals (capillary)</label></div></fieldset>
+  <div class="fields" style="margin-top:12px">
+    <div class="field"><label for="sg">Process liquid SG</label><input id="sg" type="number" step="any" inputmode="decimal" value="1"><p class="hint">Specific gravity at operating temperature (water = 1).</p></div>
+    <div class="field"><label for="h0">0 % level above HP tap, h0 (mm)</label><input id="h0" type="number" step="any" inputmode="decimal" value="0"></div>
+    <div class="field"><label for="span">Level span, H (mm)</label><input id="span" type="number" step="any" inputmode="decimal" value="5000"><p class="hint">Distance from 0 % to 100 % level.</p></div>
+    <div class="field"><label for="e">Transmitter below HP tap / seal, e (mm)</label><input id="e" type="number" step="any" inputmode="decimal" value="0"><p class="hint">Negative if the transmitter is above it.</p></div>
+    <div class="field" id="f-d"><label for="d">HP tap to LP tap distance, d (mm)</label><input id="d" type="number" step="any" inputmode="decimal" value="5500"></div>
+    <div class="field" id="f-sgw"><label for="sgw">Wet leg fill SG</label><input id="sgw" type="number" step="any" inputmode="decimal" value="1"></div>
+    <div class="field" id="f-sgf"><label for="sgf">Seal fill fluid SG</label><input id="sgf" type="number" step="any" inputmode="decimal" value="0.934"><p class="hint">From the seal datasheet, e.g. silicone DC200 ≈ 0.93.</p></div>
+    <div class="field"><label for="unit">Result unit</label><select id="unit">
+      <option value="kPa">kPa</option><option value="mbar">mbar</option><option value="mmH2O">mmH₂O</option><option value="inH2O">inH₂O</option><option value="kgcm2">kg/cm²</option><option value="bar">bar</option><option value="psi">psi</option></select></div>
+  </div>
+  <p class="msg" id="msg" role="alert"></p>
+  <p class="result" id="result" aria-live="polite"></p>
+  <h2 style="font-size:1.1rem">Step-by-step working</h2>
+  <ol class="steps" id="steps"></ol>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this calculator does</h2>
+<p>A DP transmitter measures level as hydrostatic head: ΔP = ρ·g·h. When the transmitter is not level with the 0 % point, or when the low-pressure side has a liquid-filled reference (wet leg or capillary), the zero must be shifted. This calculator finds the transmitter LRV and URV for each case.</p>
+<h2>Formula</h2>
+<pre class="formula">HP side = SG_liquid × L + SG_HP-leg × e
+LP side = 0                    (open tank / dry leg)
+        = SG_wet × (d + e)     (wet leg)
+        = SG_fill × (d + e)    (remote seals)
+LRV = HP(L = h0) − LP     URV = HP(L = h0 + H) − LP     Span = SG_liquid × H
+(heads in mm × SG = mmH₂O; 1 mmH₂O = 9.80665 Pa)</pre>
+<h2>Worked example (wet leg)</h2>
+<p>Closed tank, liquid SG 0.8, taps 6000 mm apart, 0 % level 500 mm above the HP tap, span 5000 mm, transmitter 1000 mm below the HP tap, wet leg filled with water (SG 1.0).</p>
+<ol>
+  <li>HP leg = 0.8 × 1000 = 800 mmH₂O</li>
+  <li>HP(0 %) = 0.8 × 500 + 800 = 1200; HP(100 %) = 0.8 × 5500 + 800 = 5200 mmH₂O</li>
+  <li>LP = 1.0 × (6000 + 1000) = 7000 mmH₂O</li>
+  <li>LRV = 1200 − 7000 = <strong>−5800 mmH₂O</strong>; URV = 5200 − 7000 = <strong>−1800 mmH₂O</strong> (span 4000)</li>
+</ol>
+<p>With remote seals on both sides the transmitter elevation cancels out: LRV = SG_liquid × h0 − SG_fill × d, independent of where the transmitter is mounted (but mounting it above the lower seal reduces the vacuum margin).</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li>Using design SG instead of SG at operating temperature – level error is proportional to the SG error.</li>
+  <li>Forgetting the HP impulse-line head when the transmitter is mounted below the tap.</li>
+  <li>Wet leg partly drained or evaporated (or condensate leg not yet filled on start-up): reading is wrong until the leg is full.</li>
+  <li>Swapping HP and LP: on a wet-leg installation the HP side must connect to the bottom tap.</li>
+  <li>Ignoring the vapour space density for high-pressure gas/steam drums (e.g. boiler drum level needs density compensation).</li>
+  <li>Not using the seal manufacturer's fill-fluid SG at the capillary temperature.</li>
+</ul>
+<h2>Limits and standards</h2>
+<p>Hydrostatic principle (P = ρgh) as used in ISA and manufacturer ranging guides; units per NIST SP 811 (conventional mmH₂O = 9.80665 Pa). Assumes static liquid, uniform density, negligible vapour density and no temperature effects on the capillaries. Verify against the transmitter manufacturer's ranging procedure and the as-built installation.</p>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../pressure-unit-converter/">Pressure unit converter</a></li>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../calibration-sheet/">Calibration sheet generator</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { dpLevelRange } from '../js/calc/dp-level.js';
+import { convert, UNITS } from '../js/calc/pressure.js';
+import { $, readNum, fmt, fmtSig, restoreFromQuery, writeQuery, radioValue, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
+
+const IDS = ['sg', 'h0', 'span', 'e', 'd', 'sgw', 'sgf', 'unit'];
+restoreFromQuery(IDS);
+let resultText = '';
+
+function update() {
+  const config = radioValue('config');
+  $('f-d').hidden = config === 'dry';
+  $('f-sgw').hidden = config !== 'wet';
+  $('f-sgf').hidden = config !== 'seals';
+  writeQuery(IDS, ['config']);
+  setMsg('msg', ''); $('result').textContent = ''; $('steps').textContent = ''; resultText = '';
+  const unit = $('unit').value;
+  try {
+    const r = dpLevelRange({ config, sgLiquid: readNum($('sg')), h0: readNum($('h0')), span: readNum($('span')), e: readNum($('e')), d: readNum($('d')), sgWet: readNum($('sgw')), sgFill: readNum($('sgf')) });
+    const u = (x) => convert(x, 'mmH2O', unit);
+    const L = UNITS[unit].label;
+    resultText = `LRV = ${fmtSig(u(r.lrv), 6)} ${L}, URV = ${fmtSig(u(r.urv), 6)} ${L}, span = ${fmtSig(u(r.span), 6)} ${L} (${r.kind}; ${fmt(r.lrv, 1)} to ${fmt(r.urv, 1)} mmH₂O)`;
+    const s = document.createElement('strong'); s.textContent = `LRV = ${fmtSig(u(r.lrv), 6)} ${L} · URV = ${fmtSig(u(r.urv), 6)} ${L}`;
+    $('result').append(s, document.createElement('br'), `Span ${fmtSig(u(r.span), 6)} ${L} · ${r.kind} · ${fmt(r.lrv, 1)} to ${fmt(r.urv, 1)} mmH₂O`);
+    for (const st of r.steps) { const li = document.createElement('li'); li.textContent = st; $('steps').append(li); }
+    if (unit !== 'mmH2O') { const li = document.createElement('li'); li.textContent = `Convert: 1 mmH₂O = ${fmtSig(convert(1, 'mmH2O', unit), 6)} ${L} → LRV ${fmtSig(u(r.lrv), 6)} ${L}, URV ${fmtSig(u(r.urv), 6)} ${L}`; $('steps').append(li); }
+    if (r.warnings.length) setMsg('msg', r.warnings.join(' '), 'warn');
+  } catch (e) {
+    setMsg('msg', e.message, 'bad');
+  }
+}
+onAnyInput([...IDS, 'config'], update);
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>

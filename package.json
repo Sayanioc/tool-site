@@ -1,0 +1,10 @@
+{
+  "name": "loopcalc",
+  "private": true,
+  "type": "module",
+  "description": "Instrumentation & control calculators (static site). Zero dependencies.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node tools/check-links.mjs"
+  }
+}

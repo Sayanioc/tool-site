@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pressure Unit Converter – bar, psi, kg/cm², kPa, mmH2O, inH2O | LoopCalc</title>
+<meta name="description" content="Convert pressure between bar, mbar, psi, kPa, MPa, kg/cm², mmH2O, inH2O, mmHg and atm instantly, with gauge to absolute conversion for your local atmospheric pressure.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/pressure-unit-converter/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Pressure Unit Converter","url":"https://sayanioc.github.io/tool-site/pressure-unit-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert bar, psi, kg/cm², kPa, MPa, mmH2O, inH2O, mmHg and atm, gauge or absolute."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Pressure &amp; level</nav>
+<h1>Pressure Unit Converter</h1>
+<p class="lead">Type a value in any unit – all other units update instantly. Includes kg/cm² used in Indian plants, water and mercury columns, and gauge ↔ absolute conversion.</p>
+
+<section class="card tool" aria-label="Converter">
+  <div class="fields">
+    <fieldset class="field"><legend>Values entered are</legend><div class="radios">
+      <label><input type="radio" name="ref" value="gauge" checked> Gauge (g)</label>
+      <label><input type="radio" name="ref" value="abs"> Absolute (a)</label></div></fieldset>
+    <div class="field"><label for="patm">Local atmospheric pressure (kPa abs)</label><input id="patm" type="number" step="any" inputmode="decimal" value="101.325"><p class="hint">101.325 kPa = sea level standard. Use your site barometric pressure for accuracy.</p><p class="err" id="patm-err"></p></div>
+  </div>
+  <hr class="sep">
+  <div class="fields" id="unit-fields">
+    <div class="field"><label for="u-bar">bar <span class="hint">bar</span></label><input id="u-bar" type="number" step="any" inputmode="decimal"><p class="hint" id="o-bar">&nbsp;</p></div>
+    <div class="field"><label for="u-mbar">mbar <span class="hint">millibar</span></label><input id="u-mbar" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mbar">&nbsp;</p></div>
+    <div class="field"><label for="u-psi">psi <span class="hint">pound-force per square inch</span></label><input id="u-psi" type="number" step="any" inputmode="decimal"><p class="hint" id="o-psi">&nbsp;</p></div>
+    <div class="field"><label for="u-kPa">kPa <span class="hint">kilopascal</span></label><input id="u-kPa" type="number" step="any" inputmode="decimal"><p class="hint" id="o-kPa">&nbsp;</p></div>
+    <div class="field"><label for="u-MPa">MPa <span class="hint">megapascal</span></label><input id="u-MPa" type="number" step="any" inputmode="decimal"><p class="hint" id="o-MPa">&nbsp;</p></div>
+    <div class="field"><label for="u-kgcm2">kg/cm² <span class="hint">kilogram-force per square centimetre</span></label><input id="u-kgcm2" type="number" step="any" inputmode="decimal"><p class="hint" id="o-kgcm2">&nbsp;</p></div>
+    <div class="field"><label for="u-mmH2O">mmH₂O <span class="hint">millimetre of water (conventional)</span></label><input id="u-mmH2O" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mmH2O">&nbsp;</p></div>
+    <div class="field"><label for="u-inH2O">inH₂O <span class="hint">inch of water (conventional)</span></label><input id="u-inH2O" type="number" step="any" inputmode="decimal"><p class="hint" id="o-inH2O">&nbsp;</p></div>
+    <div class="field"><label for="u-mmHg">mmHg <span class="hint">millimetre of mercury (conventional)</span></label><input id="u-mmHg" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mmHg">&nbsp;</p></div>
+    <div class="field"><label for="u-atm">atm <span class="hint">standard atmosphere</span></label><input id="u-atm" type="number" step="any" inputmode="decimal"><p class="hint" id="o-atm">&nbsp;</p></div>
+    <div class="field"><label for="u-Pa">Pa <span class="hint">pascal</span></label><input id="u-Pa" type="number" step="any" inputmode="decimal"><p class="hint" id="o-Pa">&nbsp;</p></div>
+    <div class="field"><label for="u-mH2O">mH₂O <span class="hint">metre of water (conventional)</span></label><input id="u-mH2O" type="number" step="any" inputmode="decimal"><p class="hint" id="o-mH2O">&nbsp;</p></div>
+    <div class="field"><label for="u-inHg">inHg <span class="hint">inch of mercury (conventional)</span></label><input id="u-inHg" type="number" step="any" inputmode="decimal"><p class="hint" id="o-inHg">&nbsp;</p></div>
+    <div class="field"><label for="u-torr">Torr <span class="hint">torr (1/760 atm)</span></label><input id="u-torr" type="number" step="any" inputmode="decimal"><p class="hint" id="o-torr">&nbsp;</p></div>
+  </div>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+</section>
+
+<article class="doc">
+<h2>What this converter does</h2>
+<p>It converts a pressure between the units found on plant P&amp;IDs, transmitter nameplates and gauge dials, and shows the same pressure as <strong>gauge</strong> (relative to local atmosphere) and <strong>absolute</strong> (relative to perfect vacuum).</p>
+<h2>Gauge vs absolute pressure</h2>
+<pre class="formula">P(abs) = P(gauge) + P(atm)
+P(atm) ≈ 101.325 kPa at sea level; ≈ 89.9 kPa at 1000 m altitude</pre>
+<p>Mark every pressure as <code>barg</code>/<code>bara</code> or <code>psig</code>/<code>psia</code>. Absolute pressure is needed for vapour pressure, NPSH, gas density and flow compensation; gauge pressure is what most field gauges and transmitters show. Differential pressure (DP) has no reference – convert it like a gauge value.</p>
+<h2>Conversion factors</h2>
+<pre class="formula">1 bar      = 100 000 Pa            (exact)
+1 psi      = 6 894.757 293 Pa      (1 lbf / in², exact)
+1 kg/cm²   = 98 066.5 Pa           (kgf/cm², exact)
+1 mmH₂O    = 9.806 65 Pa           (conventional, ρ = 1000 kg/m³)
+1 inH₂O    = 249.088 91 Pa         (conventional, ρ = 1000 kg/m³)
+1 mmHg     = 133.322 387 Pa        (conventional, ρ = 13 595.1 kg/m³)
+1 atm      = 101 325 Pa            (exact)
+1 Torr     = 101 325 / 760 Pa      (≈ mmHg, differs in the 7th digit)</pre>
+<h2>Worked example</h2>
+<p>A pump discharge gauge reads 12 kg/cm². In bar: 12 × 0.980665 = <strong>11.768 barg</strong>. In psi: 12 × 14.2233 = <strong>170.68 psig</strong>. Absolute at sea level: 11.768 + 1.01325 = <strong>12.781 bara</strong>.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li>Treating kg/cm² as equal to bar – it is 1.9 % smaller (1 kg/cm² = 0.980665 bar).</li>
+  <li>Mixing gauge and absolute: a 0–10 bar<strong>a</strong> transmitter reads ~1 bar at atmosphere, not 0.</li>
+  <li>inH₂O reference temperature: transmitter makers may use water at 68 °F (1 inH₂O = 248.64 Pa) or 60 °F (248.84 Pa) instead of the conventional 249.089 Pa used here – about 0.2 % difference. Check the transmitter's configured unit.</li>
+  <li>Using standard atmosphere at high-altitude sites when converting to absolute.</li>
+</ul>
+<h2>Standards and references</h2>
+<ul>
+  <li>BIPM SI Brochure (9th ed.) – pascal and exact definitions of bar and standard gravity.</li>
+  <li>NIST Special Publication 811 (2008), Appendix B – conversion factors.</li>
+  <li>ISO 80000-4 – quantities and units, mechanics.</li>
+</ul>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../dp-level-calculator/">DP level transmitter range</a></li>
+  <li><a href="../4-20ma-calculator/">4-20 mA scaling calculator</a></li>
+  <li><a href="../control-valve-cv-calculator/">Control valve Cv / Kv (liquid)</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { UNITS, toPa, fromPa, gaugeAbs } from '../js/calc/pressure.js';
+import { $, readNum, fmtSig, radioValue, setFieldError, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
+
+const ORDER = ['bar', 'mbar', 'psi', 'kPa', 'MPa', 'kgcm2', 'mmH2O', 'inH2O', 'mmHg', 'atm', 'Pa', 'mH2O', 'inHg', 'torr'];
+const q = new URLSearchParams(location.search);
+let src = UNITS[q.get('u')] ? q.get('u') : 'bar';
+$(`u-${src}`).value = q.has('v') ? q.get('v') : '1';
+if (q.get('ref') === 'abs') document.querySelector('input[name=ref][value=abs]').checked = true;
+if (q.has('patm')) $('patm').value = q.get('patm');
+let resultText = '';
+
+function update() {
+  setMsg('msg', ''); setFieldError('patm', ''); setFieldError(`u-${src}`, '');
+  resultText = '';
+  const ref = radioValue('ref');
+  const patmKPa = readNum($('patm'));
+  const v = readNum($(`u-${src}`));
+  const p = new URLSearchParams({ u: src, v: $(`u-${src}`).value, ref, patm: $('patm').value });
+  history.replaceState(null, '', `?${p}`);
+  const clear = () => ORDER.forEach((k) => { if (k !== src) $(`u-${k}`).value = ''; $(`o-${k}`).textContent = '\u00a0'; });
+  if (Number.isNaN(v)) { clear(); return; }
+  if (Number.isNaN(patmKPa)) { setFieldError('patm', 'Enter the atmospheric pressure.'); clear(); return; }
+  let ga;
+  try { ga = gaugeAbs(v, src, ref, patmKPa * 1000); } catch (e) { setMsg('msg', e.message, 'bad'); clear(); return; }
+  const pa = toPa(v, src);
+  const other = ref === 'gauge' ? ga.absPa : ga.gaugePa;
+  const sfx = ref === 'gauge' ? 'g' : 'a', osfx = ref === 'gauge' ? 'a' : 'g';
+  const lines = [];
+  for (const k of ORDER) {
+    const val = fromPa(pa, k);
+    if (k !== src) $(`u-${k}`).value = fmtSig(val, 7);
+    $(`o-${k}`).textContent = `= ${fmtSig(fromPa(other, k), 7)} ${UNITS[k].label} (${osfx === 'a' ? 'abs' : 'gauge'})`;
+    lines.push(`${fmtSig(val, 7)} ${UNITS[k].label}(${sfx})`);
+  }
+  resultText = `${v} ${UNITS[src].label} ${ref === 'gauge' ? 'gauge' : 'absolute'} = ` + lines.join(' = ');
+}
+
+ORDER.forEach((k) => $(`u-${k}`).addEventListener('input', () => { src = k; update(); }));
+onAnyInput(['patm', 'ref'], update);
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>

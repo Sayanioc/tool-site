@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4-20 mA Calculator – mA to %, Engineering Units &amp; Square Root | LoopCalc</title>
+<meta name="description" content="Free 4-20 mA scaling calculator: convert mA to percent and engineering units for any LRV/URV, linear or square-root (DP flow), with a 0/25/50/75/100 % check table and NAMUR NE 43 limits.">
+<link rel="canonical" href="https://sayanioc.github.io/tool-site/4-20ma-calculator/">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"4-20 mA Scaling Calculator","url":"https://sayanioc.github.io/tool-site/4-20ma-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Convert 4-20 mA to percent and engineering units, linear or square-root (DP flow)."}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="../"><img src="../favicon.svg" alt="" width="28" height="28">LoopCalc</a>
+  <nav class="site-nav" aria-label="Main"><a href="../#calculators">All calculators</a></nav>
+</div></header>
+<main id="main" class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Home</a> › Signals &amp; loop checks</nav>
+<h1>4-20 mA Scaling Calculator</h1>
+<p class="lead">Convert between mA, percent of span and engineering units for any range. Type in any of the three boxes – the others update instantly. Supports square-root extraction for DP flow transmitters.</p>
+
+<section class="card tool" aria-label="Calculator">
+  <div class="fields">
+    <div class="field"><label for="lrv">LRV (0 %)</label><input id="lrv" type="number" step="any" inputmode="decimal" value="0"><p class="err" id="lrv-err"></p></div>
+    <div class="field"><label for="urv">URV (100 %)</label><input id="urv" type="number" step="any" inputmode="decimal" value="10"><p class="err" id="urv-err"></p></div>
+    <div class="field"><label for="unit">Engineering unit</label><input id="unit" type="text" value="bar" maxlength="20" autocomplete="off"></div>
+    <fieldset class="field"><legend>Output mode</legend><div class="radios">
+      <label><input type="radio" name="mode" value="linear" checked> Linear</label>
+      <label><input type="radio" name="mode" value="sqrt"> Square root (DP flow)</label></div></fieldset>
+  </div>
+  <details class="no-print" style="margin-top:10px"><summary>Signal range (default 4–20 mA)</summary>
+    <div class="fields" style="margin-top:8px">
+      <div class="field"><label for="lo">Signal at 0 %</label><input id="lo" type="number" step="any" inputmode="decimal" value="4"></div>
+      <div class="field"><label for="hi">Signal at 100 %</label><input id="hi" type="number" step="any" inputmode="decimal" value="20"></div>
+    </div><p class="hint">Use 1 / 5 for a 1–5 V signal or 0 / 20 for 0–20 mA. NAMUR checks apply only to 4–20 mA.</p>
+  </details>
+  <hr class="sep">
+  <div class="fields big">
+    <div class="field"><label for="ma">Signal (mA)</label><input id="ma" type="number" step="any" inputmode="decimal" value="12"><p class="err" id="ma-err"></p></div>
+    <div class="field"><label for="pct" id="pct-label">Percent of span (%)</label><input id="pct" type="number" step="any" inputmode="decimal"><p class="err" id="pct-err"></p></div>
+    <div class="field"><label for="pv" id="pv-label">Process value</label><input id="pv" type="number" step="any" inputmode="decimal"><p class="err" id="pv-err"></p></div>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <p class="msg" id="msg" role="alert"></p>
+  <div class="actions"><button id="copy-result" type="button">Copy result</button><button id="copy-link" type="button" class="secondary">Copy link</button><span id="copy-status" class="status" role="status"></span></div>
+  <h2 style="margin-top:20px;font-size:1.1rem">Check points</h2>
+  <div class="table-wrap"><table id="tbl"><caption class="hint" style="text-align:left">5-point table for the current range</caption><thead></thead><tbody></tbody></table></div>
+</section>
+
+<article class="doc">
+<h2>What this calculator does</h2>
+<p>It converts a transmitter's analogue output between <strong>milliamps</strong>, <strong>percent of span</strong> and the <strong>process value</strong> in engineering units, for any lower and upper range value (LRV/URV) – including suppressed, elevated and reversed ranges. In square-root mode it handles DP flow meters (orifice, venturi, V-cone) where the transmitter output is linear in differential pressure and flow is proportional to √DP.</p>
+<h2>Formula</h2>
+<pre class="formula">% of span  = (mA − 4) / 16 × 100
+mA         = 4 + 16 × % / 100
+Linear:      PV = LRV + (URV − LRV) × % / 100
+Square root: PV = LRV + (URV − LRV) × √(% / 100)     (% = DP signal)
+             DP % = (flow %)² / 100</pre>
+<h2>Worked example</h2>
+<p>A pressure transmitter is ranged 0–10 bar and reads 8 mA. Percent = (8 − 4)/16 × 100 = 25 %. PV = 0 + 10 × 0.25 = <strong>2.5 bar</strong>.</p>
+<p>A DP flow transmitter (linear output, square root in the DCS) is ranged for 0–200 m³/h and reads 12 mA. DP = 50 %, flow = 200 × √0.5 = <strong>141.42 m³/h</strong> (70.71 % flow). Half flow (50 %) is only 25 % DP = 8 mA.</p>
+<h2>Common mistakes</h2>
+<ul>
+  <li><strong>Double square root</strong>: extracting the root in both the transmitter and the DCS. Check where extraction happens (transmitter transfer function vs DCS block) – it must be done once.</li>
+  <li>Using 0–20 instead of 4–20: 12 mA is 50 %, not 60 %.</li>
+  <li>Forgetting low-flow cut-off in square-root mode: near zero DP, small signal noise gives large flow errors (1 % DP = 10 % flow). Most systems cut off below 5–10 % flow.</li>
+  <li>Reading 3.6 mA or 21 mA as a process value – under NAMUR NE 43 these are failure signals, not measurements.</li>
+  <li>Wrong sign on elevated or suppressed ranges (e.g. wet-leg level LRV is negative).</li>
+</ul>
+<h2>Standards and references</h2>
+<ul>
+  <li>IEC 60381-1 – analogue signals for process control systems: 4–20 mA direct current.</li>
+  <li>NAMUR NE 43 – standardisation of the signal level for failure information of digital transmitters (3.8–20.5 mA measuring range, ≤ 3.6 / ≥ 21 mA failure).</li>
+  <li>ISO 5167 – flow measurement by differential pressure devices (flow ∝ √ΔP).</li>
+</ul>
+</article>
+<section class="related doc"><h2>Related calculators</h2><ul>
+  <li><a href="../calibration-sheet/">Calibration sheet generator</a></li>
+  <li><a href="../dp-level-calculator/">DP level transmitter range</a></li>
+  <li><a href="../pressure-unit-converter/">Pressure unit converter</a></li>
+  <li><a href="../#calculators">All instrumentation calculators</a></li>
+</ul></section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p class="disclaimer"><strong>Disclaimer:</strong> reference tool only. Verify results against manufacturer datasheets and your site standards before any safety-critical use.</p>
+  <p><a href="../">LoopCalc</a> – free instrumentation &amp; control calculators. No cookies, no tracking.</p>
+</div></footer>
+<script type="module">
+import { maToPercent, percentToMa, percentToPv, pvToPercent, pvPercent, namurStatus, scalingTable } from '../js/calc/ma-scaling.js';
+import { $, readNum, fmt, restoreFromQuery, writeQuery, radioValue, setFieldError, setMsg, setupCopyButtons, onAnyInput } from '../js/ui.js';
+
+const IDS = ['lrv', 'urv', 'unit', 'lo', 'hi', 'ma', 'pct', 'pv', 'src'];
+let src = 'ma';
+let resultText = '';
+
+const p = new URLSearchParams(location.search);
+restoreFromQuery(IDS.filter((i) => i !== 'src'));
+if (['ma', 'pct', 'pv'].includes(p.get('src'))) src = p.get('src');
+
+function update() {
+  ['lrv', 'urv', 'ma', 'pct', 'pv'].forEach((id) => setFieldError(id, ''));
+  setMsg('msg', '');
+  const lrv = readNum($('lrv')), urv = readNum($('urv')), lo = readNum($('lo')), hi = readNum($('hi'));
+  const mode = radioValue('mode'), unit = $('unit').value.trim();
+  $('pv-label').textContent = `Process value${unit ? ` (${unit})` : ''}${mode === 'sqrt' ? ' – flow' : ''}`;
+  $('pct-label').textContent = mode === 'sqrt' ? 'Signal % (DP % of span)' : 'Percent of span (%)';
+  resultText = '';
+  try {
+    if (Number.isNaN(lrv)) { setFieldError('lrv', 'Enter the LRV.'); throw null; }
+    if (Number.isNaN(urv)) { setFieldError('urv', 'Enter the URV.'); throw null; }
+    if (lrv === urv) { setFieldError('urv', 'URV must differ from LRV.'); throw null; }
+    const v = readNum($(src));
+    if (Number.isNaN(v)) { setFieldError(src, 'Enter a number.'); throw null; }
+    let pct;
+    if (src === 'ma') pct = maToPercent(v, lo, hi);
+    else if (src === 'pct') pct = v;
+    else pct = pvToPercent(v, lrv, urv, mode);
+    const mA = percentToMa(pct, lo, hi);
+    const pv = percentToPv(pct, lrv, urv, mode);
+    if (src !== 'ma') $('ma').value = fmt(mA, 3);
+    if (src !== 'pct') $('pct').value = fmt(pct, 3);
+    if (src !== 'pv') $('pv').value = fmt(pv, 4);
+    const flowPct = mode === 'sqrt' ? ` = ${fmt(pvPercent(pct, mode), 2)} % flow` : '';
+    resultText = `${fmt(mA, 3)} mA = ${fmt(pct, 2)} %${mode === 'sqrt' ? ' DP' : ''}${flowPct} = ${fmt(pv, 4)} ${unit} (range ${lrv} to ${urv} ${unit}, ${mode === 'sqrt' ? 'square root' : 'linear'})`;
+    $('result').innerHTML = '';
+    const s = document.createElement('strong'); s.textContent = resultText; $('result').append(s);
+    if (lo === 4 && hi === 20) {
+      const n = namurStatus(mA);
+      if (n.text) setMsg('msg', n.text, n.level === 'fault' ? 'bad' : 'warn');
+    }
+    if (pct < 0 || pct > 100) { if (!$('msg').textContent) setMsg('msg', 'Outside 0–100 % of span.', 'warn'); }
+  } catch (e) {
+    if (e) setMsg('msg', e.message, 'bad');
+    $('result').textContent = '';
+  }
+  renderTable(lrv, urv, mode, lo, hi, unit);
+  writeQuery(IDS.filter((i) => i !== 'src'), ['mode']);
+  const q = new URLSearchParams(location.search); q.set('src', src);
+  history.replaceState(null, '', `?${q}`);
+}
+
+function renderTable(lrv, urv, mode, lo, hi, unit) {
+  const head = $('tbl').tHead, body = $('tbl').tBodies[0];
+  body.textContent = ''; head.textContent = '';
+  let rows;
+  try { rows = scalingTable(lrv, urv, mode, lo, hi); } catch { return; }
+  const hr = head.insertRow();
+  const cols = mode === 'sqrt' ? ['Flow % of span', 'DP % (signal)', 'Signal (mA)', `Flow${unit ? ` (${unit})` : ''}`] : ['% of span', 'Signal (mA)', `PV${unit ? ` (${unit})` : ''}`];
+  cols.forEach((c) => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = c; hr.append(th); });
+  for (const r of rows) {
+    const tr = body.insertRow();
+    const vals = mode === 'sqrt' ? [fmt(r.pvPct, 0), fmt(r.signalPct, 2), fmt(r.mA, 3), fmt(r.pv, 4)] : [fmt(r.pvPct, 0), fmt(r.mA, 3), fmt(r.pv, 4)];
+    vals.forEach((v) => { tr.insertCell().textContent = v; });
+  }
+}
+
+['ma', 'pct', 'pv'].forEach((id) => $(id).addEventListener('input', () => { src = id; update(); }));
+onAnyInput(['lrv', 'urv', 'unit', 'lo', 'hi', 'mode'], update);
+setupCopyButtons(() => resultText);
+update();
+</script>
+</body>
+</html>
